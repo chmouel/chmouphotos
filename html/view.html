@@ -45,32 +45,32 @@
     <meta property="og:image:height" content="1500" />
     
     <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "publisher": {
-        "@type": "Organization",
-        "name": "Chmouel&#x27;s Photos",
-        "url": "https://photos.chmouel.com/",
-        "logo": {
-            "@type": "ImageObject",
-            "url": "https://photos.chmouel.com/favicon.ico",
-            "width": 48,
-            "height": 48
-        }
-    },
-    "author": {
-        "@type": "Person",
-        "name": "Chmouel Boudjnah",
-        "image": {
-            "@type": "ImageObject",
-            "url": "//www.gravatar.com/avatar/91d79678e08fc73a02923c38ee57b608?s=250&d=mm&r=x",
-            "width": 250,
-            "height": 250
-        },
-         "url": "https://photos.chmouel.com/author/chmouel/",
-         "sameAs": []
-     },
+     {
+         "@context": "https://schema.org",
+         "@type": "Article",
+         "publisher": {
+             "@type": "Organization",
+             "name": "Chmouel&#x27;s Photos",
+             "url": "https://photos.chmouel.com/",
+             "logo": {
+                 "@type": "ImageObject",
+                 "url": "https://photos.chmouel.com/favicon.ico",
+                 "width": 48,
+                 "height": 48
+             }
+         },
+         "author": {
+             "@type": "Person",
+             "name": "Chmouel Boudjnah",
+             "image": {
+                 "@type": "ImageObject",
+                 "url": "//www.gravatar.com/avatar/91d79678e08fc73a02923c38ee57b608?s=250&d=mm&r=x",
+                 "width": 250,
+                 "height": 250
+             },
+             "url": "https://photos.chmouel.com/author/chmouel/",
+             "sameAs": []
+         },
          "headline": "{{.item.Desc}}",
          "url": "/view/{{.item.Href}}",
          "datePublished": "2020-03-11T11:46:36.000Z",
@@ -86,12 +86,19 @@
              "@type": "WebPage",
              "@id": "https://photos.chmouel.com/"
          }
-}
+     }
     </script>
 
-    <meta name="generator" content="Ghost 3.40" />
-    <!-- <link rel="alternate" type="application/rss+xml" title="Chmouel&#x27;s Photos" href="https://photos.chmouel.com/rss/" /> -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icons/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 
+    <meta name="generator" content="ChmouPhoto" />
+
+    <!-- <link rel="alternate" type="application/rss+xml" title="Chmouel&#x27;s Photos" href="https://photos.chmouel.com/rss/" /> -->
     <script>
         if (typeof(Storage) !== 'undefined') {
             var selectTheme = localStorage.getItem('selected-theme');
