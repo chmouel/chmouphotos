@@ -1,0 +1,13 @@
+[Unit]
+Description=Chmou PHOTO service
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/www/photos/
+ExecStart=/usr/local/bin/chmouphoto
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
