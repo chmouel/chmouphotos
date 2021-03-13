@@ -10,9 +10,12 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/tjarratt/babble"
 )
 
 type Item struct {
@@ -106,6 +109,68 @@ func view(c echo.Context) error {
 	})
 }
 
+func upload(c echo.Context) error {
+	href := c.FormValue("href")
+	description := c.FormValue("description")
+	file, err := c.FormFile("file")
+	if err != nil {
+		return err
+	}
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	timef := time.Now()
+	fname := fmt.Sprintf("%d/%02d/%s", timef.Year(), timef.Month(), file.Filename)
+	fpath := filepath.Join(htmlDir, "content", "images", fname)
+	baseDir := filepath.Dir(fpath)
+	if _, err := os.Stat(fpath); err == nil {
+		fmt.Println("EXIST")
+		babbler := babble.NewBabbler()
+		babbler.Count = 1
+
+		fpath = fmt.Sprintf("%s/%s-%s%s", baseDir,
+			strings.TrimSuffix(file.Filename, filepath.Ext(fname)),
+			babbler.Babble(),
+			filepath.Ext(file.Filename))
+		fname = fmt.Sprintf("%d/%02d/%s", timef.Year(), timef.Month(), filepath.Base(fpath))
+	}
+	err = os.MkdirAll(baseDir, 0755)
+	if err != nil {
+		return err
+	}
+
+	dst, err := os.Create(fpath)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+	if _, err = io.Copy(dst, src); err != nil {
+		return err
+	}
+
+	items, err := readConfig()
+	if err != nil {
+		return err
+	}
+	newitem := Item{Image: fname, Href: href, Desc: description}
+	items = append([]Item{newitem}, items...)
+	configFP, _ := json.MarshalIndent(items, "", " ")
+	err = ioutil.WriteFile(filepath.Join(htmlDir, "config.json"), configFP, 0644)
+	if err != nil {
+		return err
+	}
+	err = Generate()
+	if err != nil {
+		return err
+	}
+	fmt.Printf("File %s uploaded successfully with fields href=%s and description=\"%s\".\n", fname, href, description)
+
+	return c.Redirect(http.StatusMovedPermanently, "/")
+}
+
 func getchunk(page int, items []Item) []Item {
 	var cnt = 0
 
@@ -144,19 +209,15 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
+func getOrEnv(env string, def string) string {
+	if os.Getenv(env) != "" {
+		def = os.Getenv(env)
+	}
+	return def
+}
+
 func Server() (err error) {
-	if os.Getenv("PHOTOS_HTML_DIRECTORY") != "" {
-		htmlDir = os.Getenv("PHOTOS_HTML_DIRECTORY")
-	}
-
-	if os.Getenv("PHOTOS_HOST") != "" {
-		host = os.Getenv("PHOTOS_HOST")
-	}
-
-	if os.Getenv("PHOTOS_PORT") != "" {
-		port = os.Getenv("PHOTOS_PORT")
-	}
-
+	htmlDir = getOrEnv("PHOTOS_HTML_DIRECTORY", htmlDir)
 	e := echo.New()
 	e.Renderer = &TemplateRenderer{
 		templates: template.Must(template.ParseGlob(filepath.Join(htmlDir, "html", "*.html"))),
@@ -171,9 +232,16 @@ func Server() (err error) {
 	}
 	e.Static("/assets", filepath.Join(htmlDir, "assets"))
 	e.Static("/content", filepath.Join(htmlDir, "content"))
+	e.GET("/upload", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "upload.html", map[string]interface{}{})
+	})
+	e.POST("/upload", upload)
 	e.GET("/page/:page", page)
 	e.GET("/view/:photo", view)
 	e.GET("/", index)
 
-	return (e.Start(fmt.Sprintf("%s:%s", host, port)))
+	return (e.Start(
+		fmt.Sprintf("%s:%s",
+			getOrEnv("PHOTOS_HOST", host),
+			getOrEnv("PHOTOS_PORT", port))))
 }
