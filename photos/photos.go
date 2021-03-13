@@ -12,6 +12,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Item struct {
@@ -160,6 +161,9 @@ func Server() (err error) {
 	e.Renderer = &TemplateRenderer{
 		templates: template.Must(template.ParseGlob(filepath.Join(htmlDir, "html", "*.html"))),
 	}
+
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
+
 	if os.Getenv("PHOTOS_DEBUG") != "" {
 		e.Debug = true
 	}
