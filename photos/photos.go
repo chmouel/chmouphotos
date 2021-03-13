@@ -25,9 +25,12 @@ var (
 	port         = "8483"
 	htmlDir      = "/home/www/photos"
 	imagePerPage = 9
-	indexPPTPL   = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "indexpp.html")))
-	indexTPL     = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "index.html")))
-	viewTPL      = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "page.html")))
+)
+
+var (
+	indexPPTPL = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "indexpp.html")))
+	indexTPL   = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "index.html")))
+	viewTPL    = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "page.html")))
 )
 
 func index(c echo.Context) error {
@@ -141,6 +144,18 @@ func readConfig() ([]Item, error) {
 }
 
 func Server() error {
+	if os.Getenv("PHOTOS_HTML_DIRECTORY") != "" {
+		htmlDir = os.Getenv("PHOTOS_HTML_DIRECTORY")
+	}
+
+	if os.Getenv("PHOTOS_HOST") != "" {
+		host = os.Getenv("PHOTOS_HOST")
+	}
+
+	if os.Getenv("PHOTOS_PORT") != "" {
+		port = os.Getenv("PHOTOS_PORT")
+	}
+
 	e := echo.New()
 
 	e.Static("/assets", filepath.Join(htmlDir, "assets"))
