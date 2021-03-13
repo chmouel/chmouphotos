@@ -156,13 +156,13 @@ func Server() (err error) {
 		port = os.Getenv("PHOTOS_PORT")
 	}
 
-	templates := &TemplateRenderer{
+	e := echo.New()
+	e.Renderer = &TemplateRenderer{
 		templates: template.Must(template.ParseGlob(filepath.Join(htmlDir, "html", "*.html"))),
 	}
-
-	e := echo.New()
-	e.Renderer = templates
-	e.Debug = true
+	if os.Getenv("PHOTOS_DEBUG") != "" {
+		e.Debug = true
+	}
 	e.Static("/assets", filepath.Join(htmlDir, "assets"))
 	e.Static("/content", filepath.Join(htmlDir, "content"))
 	e.GET("/page/:page", page)
