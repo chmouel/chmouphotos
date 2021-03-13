@@ -17,16 +17,15 @@ this :
 ```json
 [
   {
-    "image": "2021/03/IMG_20210311_122657-EFFECTS.jpg",
-    "href": "checking-out-the-weather-from-the-balcony",
-    "desc": "Checking out the weather from the balcony"
+      "image": "2021/03/IMG_20210311_122657-EFFECTS.jpg",
+      "href": "checking-out-the-weather-from-the-balcony",
+      "desc": "Checking out the weather from the balcony"
   },
   {
-    "image": "2021/03/IMG_20210214_091010.jpg"
-    "href": "snowy-sunday-group-ride-and-friends",
-    "desc": "Snowy sunday group ride and friends"
+      "image": "2021/03/IMG_20210214_091010.jpg",
+      "href": "snowy-sunday-group-ride-and-friends",
+      "desc": "Snowy sunday group ride and friends"
   },
-...
 ]
 ```
 
