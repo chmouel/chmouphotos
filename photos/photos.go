@@ -3,13 +3,14 @@ package photos
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 
-	"github.com/flosch/pongo2/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -27,22 +28,15 @@ var (
 	imagePerPage = 9
 )
 
-var (
-	indexPPTPL = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "indexpp.html")))
-	indexTPL   = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "index.html")))
-	viewTPL    = pongo2.Must(pongo2.FromFile(filepath.Join(htmlDir, "html", "page.html")))
-)
-
 func index(c echo.Context) error {
 	config, err := readConfig()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "We could not read config???.")
 	}
-	indexHTML, err := indexTPL.Execute(pongo2.Context{"items": config[0:imagePerPage]})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "We could not execute template???.")
-	}
-	return c.HTML(http.StatusOK, indexHTML)
+
+	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
+		"items": config[0:imagePerPage],
+	})
 }
 
 func page(c echo.Context) error {
@@ -65,15 +59,13 @@ func page(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Is this page a real page??.")
 	}
-	imageChunk := getchunk(pageint, config)
 
-	indexHTML, err := indexPPTPL.Execute(pongo2.Context{
+	return c.Render(http.StatusOK, "indexpp.html", map[string]interface{}{
 		"pageNext":     pageNext,
-		"pagePrevious": pagePrevious, "pageCurrent": pageint, "items": imageChunk})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "We could not execute template???.")
-	}
-	return c.HTML(http.StatusOK, indexHTML)
+		"pagePrevious": pagePrevious,
+		"pageCurrent":  pageint,
+		"items":        getchunk(pageint, config),
+	})
 }
 
 func view(c echo.Context) error {
@@ -106,12 +98,11 @@ func view(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "I no nothing about this photo???.")
 	}
 
-	viewHTML, err := viewTPL.Execute(pongo2.Context{"item": item, "itemNext": itemNext, "itemPrevious": itemPrevious})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "We could not execute template???.")
-	}
-
-	return c.HTML(http.StatusOK, viewHTML)
+	return c.Render(http.StatusOK, "indexpp.html", map[string]interface{}{
+		"item":         item,
+		"itemNext":     itemNext,
+		"itemPrevious": itemPrevious,
+	})
 }
 
 func getchunk(page int, items []Item) []Item {
@@ -143,7 +134,16 @@ func readConfig() ([]Item, error) {
 	return items, nil
 }
 
-func Server() error {
+// TemplateRenderer is a custom html/template renderer for Echo framework
+type TemplateRenderer struct {
+	templates *template.Template
+}
+
+func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
+
+func Server() (err error) {
 	if os.Getenv("PHOTOS_HTML_DIRECTORY") != "" {
 		htmlDir = os.Getenv("PHOTOS_HTML_DIRECTORY")
 	}
@@ -156,8 +156,13 @@ func Server() error {
 		port = os.Getenv("PHOTOS_PORT")
 	}
 
-	e := echo.New()
+	templates := &TemplateRenderer{
+		templates: template.Must(template.ParseGlob(filepath.Join(htmlDir, "html", "*.html"))),
+	}
 
+	e := echo.New()
+	e.Renderer = templates
+	e.Debug = true
 	e.Static("/assets", filepath.Join(htmlDir, "assets"))
 	e.Static("/content", filepath.Join(htmlDir, "content"))
 	e.GET("/page/:page", page)
