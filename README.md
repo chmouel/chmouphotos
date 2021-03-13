@@ -65,8 +65,9 @@ It's probably not reusable as is yet, but you can inspire yourself by it if you
 move a Ghost website to a static config.
 
 
-## Idea
+## Bugs/Ideas
 
 * Connect with Google Photos API, grab favourites or some other forms and
   generate from there?
 * Full on static ?
+* Figure out conflict href
