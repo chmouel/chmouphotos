@@ -163,7 +163,9 @@ func Server() (err error) {
 	}
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
-
+	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Level: 5,
+	}))
 	if os.Getenv("PHOTOS_DEBUG") != "" {
 		e.Debug = true
 	}
