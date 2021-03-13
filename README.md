@@ -1,6 +1,6 @@
 # ChmouPhotos
 
-Website for <https://photos.google.com>
+Website for <https://photos.chmouel.com>
 
 This used to be a Ghost website but it was becoming too heavy for my rpi. My
 issues was with the nodejs files was killing my SD card when updating, consumes
