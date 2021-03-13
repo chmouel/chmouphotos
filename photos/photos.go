@@ -98,7 +98,7 @@ func view(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "I no nothing about this photo???.")
 	}
 
-	return c.Render(http.StatusOK, "indexpp.html", map[string]interface{}{
+	return c.Render(http.StatusOK, "view.html", map[string]interface{}{
 		"item":         item,
 		"itemNext":     itemNext,
 		"itemPrevious": itemPrevious,
