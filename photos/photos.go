@@ -168,6 +168,7 @@ func upload(c echo.Context) error {
 	}
 	fmt.Printf("File %s uploaded successfully with fields href=%s and description=\"%s\".\n", fname, href, description)
 
+	// return c.HTML(http.StatusOK, "<b>Uploaded!<b>")
 	return c.Redirect(http.StatusMovedPermanently, "/")
 }
 
