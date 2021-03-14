@@ -64,6 +64,15 @@ the snippet from my config :
 It's probably not reusable as is yet, but you can inspire yourself by it if you
 move a Ghost website to a static config.
 
+## Upload
+
+There is a simple upload page available in `/upload`, it's up to you to protect it
+via nginx or other means.
+
+It uses [imagemagick](https://imagemagick.org/) to resize the images so you
+would need to install this. It needs to have `/usr/share/dict/words` to generate
+random words for uniqueness. For example install the package `wamerican` on
+debianies distros for the american word list
 
 ## Bugs/Ideas
 
