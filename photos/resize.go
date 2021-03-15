@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 
-	"github.com/disintegration/imaging"
 	"github.com/labstack/echo/v4"
 )
 
@@ -42,19 +42,14 @@ func resize(filename string) error {
 		fsize := filepath.Join(htmlDir, "content", "images", "size", fmt.Sprintf("w%d", size), filename)
 		if _, err := os.Stat(fsize); os.IsNotExist(err) {
 			fmt.Printf("Sizing %s to dimension %d in %s\n", filename, size, fsize)
-			image, err := imaging.Open(fpath)
-			if err != nil {
-				return err
-			}
-			out := imaging.Resize(image, size, 0, imaging.Lanczos)
-
 			err = os.MkdirAll(filepath.Dir(fsize), 0755)
 			if err != nil {
-				return err
+				return (err)
 			}
-
-			err = imaging.Save(out, fsize)
+			fmt.Printf("Resize %d %s to %s\n", size, fpath, fsize)
+			out, err := exec.Command("convert", "-resize", fmt.Sprintf("%dx", size), fpath, fsize).CombinedOutput()
 			if err != nil {
+				fmt.Println(out)
 				return err
 			}
 		}
