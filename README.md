@@ -86,3 +86,4 @@ debianies distros for the american word list
 * Add disabled field to disable an entry without removing it.
 * Add a comment field in json for adding more text to describe more than just
   the title.
+* Use webp instead of jpeg?
