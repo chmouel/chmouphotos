@@ -33,14 +33,6 @@ var (
 	imagePerPage = 9
 )
 
-func allo() string {
-	return "Hello moto"
-}
-
-var templateHelpers = template.FuncMap{
-	"test": allo,
-}
-
 func index(c echo.Context) error {
 	config, err := readConfig()
 	if err != nil {
@@ -93,7 +85,6 @@ func view(c echo.Context) error {
 	var itemNext = Item{}
 	var itemPrevious = Item{}
 	for i, value := range config {
-		fmt.Println(value.Date.Format("2006/01"))
 		if value.Date.Format("2006/01") == yearMonth && value.Href == photo {
 			item = value
 			if i+1 < len(config) {
@@ -135,20 +126,21 @@ func upload(c echo.Context) error {
 	defer src.Close()
 
 	timef := time.Now()
-	fname := fmt.Sprintf("%d/%02d/%s", timef.Year(), timef.Month(), file.Filename)
-	fpath := filepath.Join(htmlDir, "content", "images", fname)
-	baseDir := filepath.Dir(fpath)
+	baseDirDate := timef.Format("2006/01")
+	fname := file.Filename
+	fpath := filepath.Join(htmlDir, "content", "images", baseDirDate, fname)
+
 	if _, err := os.Stat(fpath); err == nil {
 		babbler := babble.NewBabbler()
 		babbler.Count = 1
 
-		fpath = fmt.Sprintf("%s/%s-%s%s", baseDir,
+		fpath = fmt.Sprintf("%s/%s-%s%s", baseDirDate,
 			strings.TrimSuffix(file.Filename, filepath.Ext(fname)),
 			babbler.Babble(),
 			filepath.Ext(file.Filename))
 		fname = fmt.Sprintf("%d/%02d/%s", timef.Year(), timef.Month(), filepath.Base(fpath))
 	}
-	err = os.MkdirAll(baseDir, 0755)
+	err = os.MkdirAll(filepath.Dir(fpath), 0755)
 	if err != nil {
 		return err
 	}
@@ -166,13 +158,15 @@ func upload(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	newitem := Item{Image: fname, Href: href, Desc: description}
+
+	newitem := Item{Image: file.Filename, Href: href, Date: SimpleJsonDate{timef}, Desc: description}
 	items = append([]Item{newitem}, items...)
 	configFP, _ := json.MarshalIndent(items, "", " ")
 	err = ioutil.WriteFile(filepath.Join(htmlDir, "config.json"), configFP, 0644)
 	if err != nil {
 		return err
 	}
+
 	err = Generate()
 	if err != nil {
 		return err

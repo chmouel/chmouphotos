@@ -22,11 +22,10 @@ func (j *SimpleJsonDate) UnmarshalJSON(b []byte) error {
 }
 
 func (j SimpleJsonDate) MarshalJSON() ([]byte, error) {
-	return json.Marshal(j)
+	return json.Marshal(strings.Split(j.Format("2006-01-02"), " ")[0])
 }
 
 // Maybe a Format function for printing your date
 func (j SimpleJsonDate) DayMonthDir() string {
-	t := SimpleJsonDate(j)
-	return t.Format("2006/01")
+	return SimpleJsonDate(j).Format("2006/01")
 }
