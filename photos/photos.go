@@ -19,9 +19,10 @@ import (
 )
 
 type Item struct {
-	Image string `json:"image"`
-	Href  string `json:"href"`
-	Desc  string `json:"desc"`
+	Image string         `json:"image"`
+	Href  string         `json:"href"`
+	Desc  string         `json:"desc"`
+	Date  SimpleJsonDate `json:"date"`
 }
 
 var (
@@ -31,6 +32,14 @@ var (
 	htmlDir      = "/home/www/photos"
 	imagePerPage = 9
 )
+
+func allo() string {
+	return "Hello moto"
+}
+
+var templateHelpers = template.FuncMap{
+	"test": allo,
+}
 
 func index(c echo.Context) error {
 	config, err := readConfig()
@@ -78,11 +87,14 @@ func view(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "We could not read config???.")
 	}
 	photo := c.Param("photo")
+	yearMonth := fmt.Sprintf("%s/%s", c.Param("year"), c.Param("month"))
+
 	var item = Item{}
 	var itemNext = Item{}
 	var itemPrevious = Item{}
 	for i, value := range config {
-		if value.Href == photo {
+		fmt.Println(value.Date.Format("2006/01"))
+		if value.Date.Format("2006/01") == yearMonth && value.Href == photo {
 			item = value
 			if i+1 < len(config) {
 				itemNext = config[i+1]
@@ -127,7 +139,6 @@ func upload(c echo.Context) error {
 	fpath := filepath.Join(htmlDir, "content", "images", fname)
 	baseDir := filepath.Dir(fpath)
 	if _, err := os.Stat(fpath); err == nil {
-		fmt.Println("EXIST")
 		babbler := babble.NewBabbler()
 		babbler.Count = 1
 
@@ -238,7 +249,7 @@ func Server() (err error) {
 	})
 	e.POST("/upload", upload)
 	e.GET("/page/:page", page)
-	e.GET("/view/:photo", view)
+	e.GET("/:year/:month/:photo", view)
 	e.GET("/", index)
 
 	return (e.Start(
