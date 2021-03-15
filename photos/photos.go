@@ -19,9 +19,10 @@ import (
 )
 
 type Item struct {
-	Image string `json:"image"`
-	Href  string `json:"href"`
-	Desc  string `json:"desc"`
+	Image string         `json:"image"`
+	Href  string         `json:"href"`
+	Desc  string         `json:"desc"`
+	Date  SimpleJsonDate `json:"date"`
 }
 
 var (
@@ -78,11 +79,13 @@ func view(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "We could not read config???.")
 	}
 	photo := c.Param("photo")
+	yearMonth := fmt.Sprintf("%s/%s", c.Param("year"), c.Param("month"))
+
 	var item = Item{}
 	var itemNext = Item{}
 	var itemPrevious = Item{}
 	for i, value := range config {
-		if value.Href == photo {
+		if value.Date.Format("2006/01") == yearMonth && value.Href == photo {
 			item = value
 			if i+1 < len(config) {
 				itemNext = config[i+1]
@@ -123,21 +126,21 @@ func upload(c echo.Context) error {
 	defer src.Close()
 
 	timef := time.Now()
-	fname := fmt.Sprintf("%d/%02d/%s", timef.Year(), timef.Month(), file.Filename)
-	fpath := filepath.Join(htmlDir, "content", "images", fname)
-	baseDir := filepath.Dir(fpath)
+	baseDirDate := timef.Format("2006/01")
+	fname := file.Filename
+	fpath := filepath.Join(htmlDir, "content", "images", baseDirDate, fname)
+
 	if _, err := os.Stat(fpath); err == nil {
-		fmt.Println("EXIST")
 		babbler := babble.NewBabbler()
 		babbler.Count = 1
 
-		fpath = fmt.Sprintf("%s/%s-%s%s", baseDir,
+		fpath = fmt.Sprintf("%s/%s-%s%s", baseDirDate,
 			strings.TrimSuffix(file.Filename, filepath.Ext(fname)),
 			babbler.Babble(),
 			filepath.Ext(file.Filename))
 		fname = fmt.Sprintf("%d/%02d/%s", timef.Year(), timef.Month(), filepath.Base(fpath))
 	}
-	err = os.MkdirAll(baseDir, 0755)
+	err = os.MkdirAll(filepath.Dir(fpath), 0755)
 	if err != nil {
 		return err
 	}
@@ -155,13 +158,15 @@ func upload(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	newitem := Item{Image: fname, Href: href, Desc: description}
+
+	newitem := Item{Image: file.Filename, Href: href, Date: SimpleJsonDate{timef}, Desc: description}
 	items = append([]Item{newitem}, items...)
 	configFP, _ := json.MarshalIndent(items, "", " ")
 	err = ioutil.WriteFile(filepath.Join(htmlDir, "config.json"), configFP, 0644)
 	if err != nil {
 		return err
 	}
+
 	err = Generate()
 	if err != nil {
 		return err
@@ -238,7 +243,7 @@ func Server() (err error) {
 	})
 	e.POST("/upload", upload)
 	e.GET("/page/:page", page)
-	e.GET("/view/:photo", view)
+	e.GET("/:year/:month/:photo", view)
 	e.GET("/", index)
 
 	return (e.Start(
