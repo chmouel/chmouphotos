@@ -12,7 +12,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>{{.item.Desc}}</title>
+    <title>{{.item.Title}}</title>
 
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,14 +28,14 @@
     
     <meta property="og:site_name" content="Chmouel&#x27;s Photos" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{.item.Desc}}" />
+    <meta property="og:title" content="{{.item.Title}}" />
     <meta property="og:url" content="/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}" />
     <meta property="og:image" content="https://photos.chmouel.com/content/images/{{.item.Date.DayMonthDir}}/{{.item.Image}}" />
     <meta property="article:published_time" content="2020-03-11T11:46:36.000Z" />
     <meta property="article:modified_time" content="2020-03-11T11:55:20.000Z" />
     
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{{.item.Desc}}" />
+    <meta name="twitter:title" content="{{.item.Title}}" />
     <meta name="twitter:url" content="/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}" />
     <meta name="twitter:image" content="https://photos.chmouel.com/content/images/{{.item.Date.DayMonthDir}}/{{.item.Image}}" />
     <meta name="twitter:label1" content="Written by" />
@@ -71,7 +71,7 @@
              "url": "https://photos.chmouel.com/author/chmouel/",
              "sameAs": []
          },
-         "headline": "{{.item.Desc}}",
+         "headline": "{{.item.Title}}",
          "url": "/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}",
          "datePublished": "2020-03-11T11:46:36.000Z",
          "dateModified": "2020-03-11T11:55:20.000Z",
@@ -181,7 +181,7 @@
 
 <article class="post u-marginBottom40 u-relative">
     <header class="post-header u-container u-maxWidth740 u-paddingTop30 u-relative zindex3">
-    <h1 class="post-title u-marginBottom20 u-fontSizeLargest u-md-fontSize36">{{.item.Desc}}</h1>
+    <h1 class="post-title u-marginBottom20 u-fontSizeLargest u-md-fontSize36">{{.item.Title}}</h1>
     
 
     <hr>
@@ -198,7 +198,7 @@
                     /content/images/size/w2000/{{.item.Date.DayMonthDir}}/{{.item.Image}} 2000w"
              sizes="(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw"
              src="/content/images/size/w2000/{{.item.Date.DayMonthDir}}/{{.item.Image}}"
-             alt="{{.item.Desc}}"
+             alt="{{.item.Title}}"
         />
         </figure>
 
@@ -213,16 +213,16 @@
       <div class="prev-next">
           <div class="u-flex u-relative godo-tracking u-marginBottom30" data-event-category="Article" data-event-action="Previous photo"    data-event-label="https://photos.chmouel.com/view/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" data-event-non-interaction="true">
 
-              <a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemPrevious.Desc}}">
-            <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Image}}" alt="{{.itemPrevious.Desc}}"/>
+              <a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemPrevious.Title}}">
+            <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Image}}" alt="{{.itemPrevious.Title}}"/>
           </a>
 
           <div class="prev-next-body u-paddingLeft20 u-flex1">
             <div class="u-fontSizeSmaller u-lineHeight1 u-textMuted u-marginBottom10">Previous photo</div>
-            <h2 class="prev-next-title u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" class="u-relative zindex3">{{.itemPrevious.Desc}}</a></h2>
+            <h2 class="prev-next-title u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" class="u-relative zindex3">{{.itemPrevious.Title}}</a></h2>
           </div>
 
-          <a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" aria-label="{{.itemPrevious.Desc}}" class="u-absolute0 zindex2"></a>
+          <a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" aria-label="{{.itemPrevious.Title}}" class="u-absolute0 zindex2"></a>
         </div>
         
         <div class="u-flex u-relative godo-tracking "
@@ -231,17 +231,17 @@
              data-event-label="https://photos.chmouel.com/view/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}"
              data-event-non-interaction="true">
             <a href="/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}"
-               class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemNext.Desc}}">
-              <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Image}}" alt="{{.itemNext.Desc}}"/>
+               class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemNext.Title}}">
+              <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Image}}" alt="{{.itemNext.Title}}"/>
                   </a>
 
                   <div class="prev-next-body u-paddingLeft20 u-flex1">
                     <div class="u-fontSizeSmaller u-lineHeight1 u-textMuted u-marginBottom10">Next photo</div>
-                    <h2 class="prev-next-Symbol’s function definition is void: yas-with-commentitle u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}" class="u-relative zindex3">{{.itemNext.Desc}}</a></h2>
+                    <h2 class="prev-next-Symbol’s function definition is void: yas-with-commentitle u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}" class="u-relative zindex3">{{.itemNext.Title}}</a></h2>
                     <p class="prev-next-excerpt u-fontSizeSmall u-textMuted u-lineClamp2 u-lineHeightTight"></p>
                   </div>
                   
-                  <a href="/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}" aria-label="{{.itemNext.Desc}}" class="u-absolute0 zindex2"></a>
+                  <a href="/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}" aria-label="{{.itemNext.Title}}" class="u-absolute0 zindex2"></a>
                 </div>
         </div>
         <hr>
