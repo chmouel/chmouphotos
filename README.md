@@ -78,12 +78,8 @@ debianies distros for the american word list
 
 * Connect with Google Photos API, grab favourites or some other forms and
   generate from there?
-* Full on static ?
-* Figure out conflict href
+* Full on static ? Upload on CI from a GIT project?
 * When uploading add the status of the resizing which may take up to a minute on
   small rpi.
-* In upload form automatically generate href from Desc.
 * Add disabled field to disable an entry without removing it.
-* Add a comment field in json for adding more text to describe more than just
-  the title.
 * Use webp instead of jpeg?
