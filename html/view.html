@@ -29,6 +29,10 @@
     <meta property="og:site_name" content="Chmouel&#x27;s Photos" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{.item.Title}}" />
+    {{ if .item.Description }}
+    <meta property="og:description" content="{{.item.Description}}" />
+    <meta name="twitter:description" content="{{.item.Description}}" />
+    {{ end }}
     <meta property="og:url" content="/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}" />
     <meta property="og:image" content="https://photos.chmouel.com/content/images/{{.item.Date.DayMonthDir}}/{{.item.Image}}" />
     <meta property="article:published_time" content="2020-03-11T11:46:36.000Z" />
@@ -81,7 +85,7 @@
              "width": 2000,
              "height": 1500
          },
-         "keywords": "plane, sunset",
+         {{ if .item.Description }}"description": "{{.item.Description}}",{{end}}
          "mainEntityOfPage": {
              "@type": "WebPage",
              "@id": "https://photos.chmouel.com/"
@@ -203,7 +207,13 @@
         </figure>
 
     <div class="post-wrap u-maxWidth1000 u-relative u-marginAuto">
-        <div id="post-body" class="post-body u-container u-maxWidth740 u-relative"></div>
+      <div id="post-body" class="post-body u-container u-maxWidth740 u-relative">
+        {{ if .item.Description }}
+        <p>
+          {{ .item.Description }}
+        </p>
+        {{end}}
+      </div>
     </div>
 
     <footer class="post-footer u-container u-maxWidth740">
