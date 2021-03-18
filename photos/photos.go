@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -19,10 +20,11 @@ import (
 )
 
 type Item struct {
-	Image string         `json:"image"`
-	Href  string         `json:"href"`
-	Desc  string         `json:"desc"`
-	Date  SimpleJsonDate `json:"date"`
+	Image       string         `json:"image"`
+	Href        string         `json:"href"`
+	Title       string         `json:"title"`
+	Description string         `json:"description"`
+	Date        SimpleJsonDate `json:"date"`
 }
 
 var (
@@ -114,7 +116,28 @@ func view(c echo.Context) error {
 
 func upload(c echo.Context) error {
 	href := c.FormValue("href")
+	title := c.FormValue("title")
 	description := c.FormValue("description")
+	alphanum, err := regexp.Compile("[^a-zA-Z0-9-]+")
+	if err != nil {
+		return err
+	}
+	if title == "" {
+		return echo.NewHTTPError(http.StatusInternalServerError, "You are missing a title")
+	}
+
+	if href == "" {
+		href = strings.Trim(
+			alphanum.ReplaceAllString(
+				strings.ReplaceAll(
+					strings.ToLower(
+						strings.TrimSpace(title)),
+					" ",
+					"-"),
+				""),
+			"-")
+	}
+
 	file, err := c.FormFile("file")
 	if err != nil {
 		return err
@@ -127,19 +150,25 @@ func upload(c echo.Context) error {
 
 	timef := time.Now()
 	baseDirDate := timef.Format("2006/01")
-	fname := file.Filename
+	fname := href + filepath.Ext(file.Filename)
 	fpath := filepath.Join(htmlDir, "content", "images", baseDirDate, fname)
 
 	if _, err := os.Stat(fpath); err == nil {
 		babbler := babble.NewBabbler()
 		babbler.Count = 1
+		randomword := strings.ToLower(alphanum.ReplaceAllString(babbler.Babble(), ""))
+		fpath = filepath.Join(htmlDir, "content", "images",
+			fmt.Sprintf("%s/%s-%s%s",
+				baseDirDate,
+				href,
+				randomword,
+				filepath.Ext(file.Filename)))
 
-		fpath = fmt.Sprintf("%s/%s-%s%s", baseDirDate,
-			strings.TrimSuffix(file.Filename, filepath.Ext(fname)),
-			babbler.Babble(),
-			filepath.Ext(file.Filename))
-		fname = fmt.Sprintf("%d/%02d/%s", timef.Year(), timef.Month(), filepath.Base(fpath))
+		fname = filepath.Base(fpath)
+		href = filepath.Base(strings.TrimSuffix(fname, filepath.Ext(fname)))
 	}
+	fmt.Printf("%s %s %s \n", fpath, fname, href)
+
 	err = os.MkdirAll(filepath.Dir(fpath), 0755)
 	if err != nil {
 		return err
@@ -159,7 +188,13 @@ func upload(c echo.Context) error {
 		return err
 	}
 
-	newitem := Item{Image: file.Filename, Href: href, Date: SimpleJsonDate{timef}, Desc: description}
+	newitem := Item{
+		Image:       fname,
+		Href:        href,
+		Description: description,
+		Date:        SimpleJsonDate{timef},
+		Title:       title,
+	}
 	items = append([]Item{newitem}, items...)
 	configFP, _ := json.MarshalIndent(items, "", " ")
 	err = ioutil.WriteFile(filepath.Join(htmlDir, "config.json"), configFP, 0644)
@@ -171,7 +206,6 @@ func upload(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("File %s uploaded successfully with fields href=%s and description=\"%s\".\n", fname, href, description)
 
 	// return c.HTML(http.StatusOK, "<b>Uploaded!<b>")
 	return c.Redirect(http.StatusMovedPermanently, "/")
@@ -212,6 +246,7 @@ type TemplateRenderer struct {
 }
 
 func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
