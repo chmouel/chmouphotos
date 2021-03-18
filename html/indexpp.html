@@ -133,11 +133,11 @@
               <figure class="story-image u-relative u-borderLighter u-bgColorGrayLight u-block u-overflowHidden">
                 <a href="/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Href }}" class="u-block">
                   <img class="story-img u-absolute u-image u-block blur-up lazyload"
-                    src="/content/images/size/w1000/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image}}"
-                    srcset="/content/images/size/w30/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image}}"
-                    data-srcset="/content/images/size/w300/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image}} 300w, /content/images/size/w600/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image}} 600w, /content/images/size/w1000/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image}} 1000w"
+                    src="/content/images/size/w1000/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image | html}}"
+                    srcset="/content/images/size/w30/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image | html}}"
+                    data-srcset="/content/images/size/w300/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image  | html}} 300w, /content/images/size/w600/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image  | html}} 600w, /content/images/size/w1000/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Image  | html}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 0).Desc}}"
+                    alt="{{ (index .items 0).Title}}"
                   />
                 </a>
 
@@ -145,7 +145,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Href }}" class="u-block">{{ (index .items 0).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 0).Date.DayMonthDir}}/{{ (index .items 0).Href }}" class="u-block">{{ (index .items 0).Title}}</a></h2>
 
 
               </div>
@@ -162,7 +162,7 @@
                     srcset="/content/images/size/w30/{{ (index .items 1).Date.DayMonthDir}}/{{ (index .items 1).Image}}"
                     data-srcset="/content/images/size/w300/{{ (index .items 1).Date.DayMonthDir}}/{{ (index .items 1).Image}} 300w, /content/images/size/w600/{{ (index .items 1).Date.DayMonthDir}}/{{ (index .items 1).Image}} 600w, /content/images/size/w1000/{{ (index .items 1).Date.DayMonthDir}}/{{ (index .items 1).Image}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 1).Desc}}"
+                    alt="{{ (index .items 1).Title}}"
                   />
                 </a>
 
@@ -170,7 +170,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 1).Date.DayMonthDir}}/{{ (index .items 1).Href }}" class="u-block">{{ (index .items 1).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 1).Date.DayMonthDir}}/{{ (index .items 1).Href }}" class="u-block">{{ (index .items 1).Title}}</a></h2>
 
 
               </div>
@@ -187,7 +187,7 @@
                     srcset="/content/images/size/w30/{{ (index .items 2).Date.DayMonthDir}}/{{ (index .items 2).Image}}"
                     data-srcset="/content/images/size/w300/{{ (index .items 2).Date.DayMonthDir}}/{{ (index .items 2).Image}} 300w, /content/images/size/w600/{{ (index .items 2).Date.DayMonthDir}}/{{ (index .items 2).Image}} 600w, /content/images/size/w1000/{{ (index .items 2).Date.DayMonthDir}}/{{ (index .items 2).Image}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 2).Desc}}"
+                    alt="{{ (index .items 2).Title}}"
                   />
                 </a>
 
@@ -195,7 +195,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 2).Date.DayMonthDir}}/{{ (index .items 2).Href }}" class="u-block">{{ (index .items 2).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 2).Date.DayMonthDir}}/{{ (index .items 2).Href }}" class="u-block">{{ (index .items 2).Title}}</a></h2>
 
 
               </div>
@@ -212,7 +212,7 @@
                     srcset="/content/images/size/w30/{{ (index .items 3).Date.DayMonthDir}}/{{ (index .items 3).Image}}"
                     data-srcset="/content/images/size/w300/{{ (index .items 3).Date.DayMonthDir}}/{{ (index .items 3).Image}} 300w, /content/images/size/w600/{{ (index .items 3).Date.DayMonthDir}}/{{ (index .items 3).Image}} 600w, /content/images/size/w1000/{{ (index .items 3).Date.DayMonthDir}}/{{ (index .items 3).Image}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 3).Desc}}"
+                    alt="{{ (index .items 3).Title}}"
                   />
                 </a>
 
@@ -220,7 +220,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 3).Date.DayMonthDir}}/{{ (index .items 3).Href }}" class="u-block">{{ (index .items 3).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 3).Date.DayMonthDir}}/{{ (index .items 3).Href }}" class="u-block">{{ (index .items 3).Title}}</a></h2>
 
 
               </div>
@@ -237,7 +237,7 @@
                     srcset="/content/images/size/w30/{{ (index .items 4).Date.DayMonthDir}}/{{ (index .items 4).Image}}"
                     data-srcset="/content/images/size/w300/{{ (index .items 4).Date.DayMonthDir}}/{{ (index .items 4).Image}} 300w, /content/images/size/w600/{{ (index .items 4).Date.DayMonthDir}}/{{ (index .items 4).Image}} 600w, /content/images/size/w1000/{{ (index .items 4).Date.DayMonthDir}}/{{ (index .items 4).Image}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 4).Desc}}"
+                    alt="{{ (index .items 4).Title}}"
                   />
                 </a>
 
@@ -245,7 +245,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 4).Date.DayMonthDir}}/{{ (index .items 4).Href }}" class="u-block">{{ (index .items 4).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 4).Date.DayMonthDir}}/{{ (index .items 4).Href }}" class="u-block">{{ (index .items 4).Title}}</a></h2>
 
 
               </div>
@@ -262,7 +262,7 @@
                     srcset="/content/images/size/w30/{{ (index .items 5).Date.DayMonthDir}}/{{ (index .items 5).Image}}"
                     data-srcset="/content/images/size/w300/{{ (index .items 5).Date.DayMonthDir}}/{{ (index .items 5).Image}} 300w, /content/images/size/w600/{{ (index .items 5).Date.DayMonthDir}}/{{ (index .items 5).Image}} 600w, /content/images/size/w1000/{{ (index .items 5).Date.DayMonthDir}}/{{ (index .items 5).Image}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 5).Desc}}"
+                    alt="{{ (index .items 5).Title}}"
                   />
                 </a>
 
@@ -270,7 +270,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 5).Date.DayMonthDir}}/{{ (index .items 5).Href }}" class="u-block">{{ (index .items 5).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 5).Date.DayMonthDir}}/{{ (index .items 5).Href }}" class="u-block">{{ (index .items 5).Title}}</a></h2>
 
 
               </div>
@@ -287,7 +287,7 @@
                     srcset="/content/images/size/w30/{{ (index .items 6).Date.DayMonthDir}}/{{ (index .items 6).Image}}"
                     data-srcset="/content/images/size/w300/{{ (index .items 6).Date.DayMonthDir}}/{{ (index .items 6).Image}} 300w, /content/images/size/w600/{{ (index .items 6).Date.DayMonthDir}}/{{ (index .items 6).Image}} 600w, /content/images/size/w1000/{{ (index .items 6).Date.DayMonthDir}}/{{ (index .items 6).Image}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 6).Desc}}"
+                    alt="{{ (index .items 6).Title}}"
                   />
                 </a>
 
@@ -295,7 +295,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 6).Date.DayMonthDir}}/{{ (index .items 6).Href }}" class="u-block">{{ (index .items 6).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 6).Date.DayMonthDir}}/{{ (index .items 6).Href }}" class="u-block">{{ (index .items 6).Title}}</a></h2>
 
 
               </div>
@@ -312,7 +312,7 @@
                     srcset="/content/images/size/w30/{{ (index .items 7).Date.DayMonthDir}}/{{ (index .items 7).Image}}"
                     data-srcset="/content/images/size/w300/{{ (index .items 7).Date.DayMonthDir}}/{{ (index .items 7).Image}} 300w, /content/images/size/w600/{{ (index .items 7).Date.DayMonthDir}}/{{ (index .items 7).Image}} 600w, /content/images/size/w1000/{{ (index .items 7).Date.DayMonthDir}}/{{ (index .items 7).Image}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 7).Desc}}"
+                    alt="{{ (index .items 7).Title}}"
                   />
                 </a>
 
@@ -320,7 +320,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 7).Date.DayMonthDir}}/{{ (index .items 7).Href }}" class="u-block">{{ (index .items 7).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 7).Date.DayMonthDir}}/{{ (index .items 7).Href }}" class="u-block">{{ (index .items 7).Title}}</a></h2>
 
 
               </div>
@@ -337,7 +337,7 @@
                     srcset="/content/images/size/w30/{{ (index .items 8).Date.DayMonthDir}}/{{ (index .items 8).Image}}"
                     data-srcset="/content/images/size/w300/{{ (index .items 8).Date.DayMonthDir}}/{{ (index .items 8).Image}} 300w, /content/images/size/w600/{{ (index .items 8).Date.DayMonthDir}}/{{ (index .items 8).Image}} 600w, /content/images/size/w1000/{{ (index .items 8).Date.DayMonthDir}}/{{ (index .items 8).Image}} 1000w"
                     data-sizes="(max-width: 1000px) 400px, 600px"
-                    alt="{{ (index .items 8).Desc}}"
+                    alt="{{ (index .items 8).Title}}"
                   />
                 </a>
 
@@ -345,7 +345,7 @@
 
               <div class="story-body u-paddingTop20 u-flexColumnTop">
 
-                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 8).Date.DayMonthDir}}/{{ (index .items 8).Href }}" class="u-block">{{ (index .items 8).Desc}}</a></h2>
+                <h2 class="story-title u-fontSizeLarge u-contentTitle"><a href="/{{ (index .items 8).Date.DayMonthDir}}/{{ (index .items 8).Href }}" class="u-block">{{ (index .items 8).Title}}</a></h2>
 
 
               </div>
