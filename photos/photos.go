@@ -22,7 +22,7 @@ var (
 	host         = "localhost"
 	port         = "8483"
 	htmlDir      = "/home/www/photos"
-	dbPath       = "/home/www/photos/config.db"
+	dbPath       = "/home/www/photos/photos.db"
 	imagePerPage = 9
 )
 
