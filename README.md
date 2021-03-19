@@ -11,28 +11,14 @@ I still wanted to use the excellent theme from
 [GodoFreddo](https://godofredo.ninja) and didn't need a lot of the fancy
 editing features from Ghost, since I just need only a few metadatas.
 
-I made a `config.json` with a list of `images`/`href`/`desc`, which looks like
-this :
+The picutres are stored in a sqlite DB, the schemas is simple see
+[photos/data.go][./photos/data.go] for the structure.
 
-```json
-[
-  {
-      "image": "2021/03/IMG_20210311_122657-EFFECTS.jpg",
-      "href": "checking-out-the-weather-from-the-balcony",
-      "desc": "Checking out the weather from the balcony"
-  },
-  {
-      "image": "2021/03/IMG_20210214_091010.jpg",
-      "href": "snowy-sunday-group-ride-and-friends",
-      "desc": "Snowy sunday group ride and friends"
-  },
-]
-```
+It takes it and serve the pages via a custom golang server.
 
-and serve the pages via a custom golang server to.
-
-Probably could do pure static but I want to do an uploader that does the
-resizing and such and being more dynamic while on the road/phone.
+Probably could be a pure static site but I want to do an uploader that does the
+resizing and such and being more dynamic while on the road/phone. Maybe in the
+future, it's fun to experiment.
 
 The service is served under [systemd](./systemd/chmouphoto.service) and only
 consumes a few MBS,
