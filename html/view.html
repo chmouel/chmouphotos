@@ -22,9 +22,9 @@
 
     <link rel="stylesheet" type="text/css" href="/assets/styles/main.css?v=9d5cbf9846"/>
 
-    <link rel="canonical" href="/{{.item.Date.DayMonthDir}}/{{.item.Href}}" />
+    <link rel="canonical" href="/{{.item.ImageUrl }}" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
-    <link rel="amphtml" href="/{{.item.Date.DayMonthDir}}/{{.item.Href}}/amp/" />
+    <link rel="amphtml" href="/{{.item.ImageUrl }}/amp/" />
     
     <meta property="og:site_name" content="Chmouel&#x27;s Photos" />
     <meta property="og:type" content="article" />
@@ -33,15 +33,15 @@
     <meta property="og:description" content="{{.item.Description}}" />
     <meta name="twitter:description" content="{{.item.Description}}" />
     {{ end }}
-    <meta property="og:url" content="/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}" />
-    <meta property="og:image" content="https://photos.chmouel.com/content/images/{{.item.Date.DayMonthDir}}/{{.item.Image}}" />
+    <meta property="og:url" content="/view/{{.item.ImageUrl }}" />
+    <meta property="og:image" content="https://photos.chmouel.com/content/images/{{.item.ImagePath }}" />
     <meta property="article:published_time" content="2020-03-11T11:46:36.000Z" />
     <meta property="article:modified_time" content="2020-03-11T11:55:20.000Z" />
     
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{.item.Title}}" />
-    <meta name="twitter:url" content="/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}" />
-    <meta name="twitter:image" content="https://photos.chmouel.com/content/images/{{.item.Date.DayMonthDir}}/{{.item.Image}}" />
+    <meta name="twitter:url" content="/view/{{.item.ImageUrl }}" />
+    <meta name="twitter:image" content="https://photos.chmouel.com/content/images/{{.item.ImagePath }}" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="Chmouel Boudjnah" />
     <meta name="twitter:site" content="@chmouel" />
@@ -76,12 +76,12 @@
              "sameAs": []
          },
          "headline": "{{.item.Title}}",
-         "url": "/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}",
+         "url": "/view/{{.item.ImageUrl }}",
          "datePublished": "2020-03-11T11:46:36.000Z",
          "dateModified": "2020-03-11T11:55:20.000Z",
          "image": {
              "@type": "ImageObject",
-             "url": "https://photos.chmouel.com/content/images/{{.item.Date.DayMonthDir}}/{{.item.Image}}",
+             "url": "https://photos.chmouel.com/content/images/{{.item.ImagePath }}",
              "width": 2000,
              "height": 1500
          },
@@ -196,12 +196,12 @@
 
     <figure class="post-image u-block u-marginAuto u-sizeFullHeight u-sizeFullWidth u-maxWidth1000">
         <img class="u-block u-marginAuto u-sizeFullWidth simply-zoom"
-             srcset="/content/images/size/w300/{{.item.Date.DayMonthDir}}/{{.item.Image}} 300w,
-                    /content/images/size/w600/{{.item.Date.DayMonthDir}}/{{.item.Image}} 600w,
-                    /content/images/size/w1000/{{.item.Date.DayMonthDir}}/{{.item.Image}} 1000w,
-                    /content/images/size/w2000/{{.item.Date.DayMonthDir}}/{{.item.Image}} 2000w"
+             srcset="/content/images/size/w300/{{.item.ImagePath }} 300w,
+                    /content/images/size/w600/{{.item.ImagePath }} 600w,
+                    /content/images/size/w1000/{{.item.ImagePath }} 1000w,
+                    /content/images/size/w2000/{{.item.ImagePath }} 2000w"
              sizes="(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw"
-             src="/content/images/size/w2000/{{.item.Date.DayMonthDir}}/{{.item.Image}}"
+             src="/content/images/size/w2000/{{.item.ImagePath }}"
              alt="{{.item.Title}}"
         />
         </figure>
@@ -221,37 +221,37 @@
       </div>
       <hr>
       <div class="prev-next">
-          <div class="u-flex u-relative godo-tracking u-marginBottom30" data-event-category="Article" data-event-action="Previous photo"    data-event-label="https://photos.chmouel.com/view/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" data-event-non-interaction="true">
+          <div class="u-flex u-relative godo-tracking u-marginBottom30" data-event-category="Article" data-event-action="Previous photo"    data-event-label="https://photos.chmouel.com/view/{{.itemPrevious.ImageUrl }}" data-event-non-interaction="true">
 
-              <a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemPrevious.Title}}">
-            <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Image}}" alt="{{.itemPrevious.Title}}"/>
+              <a href="/{{.itemPrevious.ImageUrl }}" class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemPrevious.Title}}">
+            <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemPrevious.ImagePath }}" alt="{{.itemPrevious.Title}}"/>
           </a>
 
           <div class="prev-next-body u-paddingLeft20 u-flex1">
             <div class="u-fontSizeSmaller u-lineHeight1 u-textMuted u-marginBottom10">Previous photo</div>
-            <h2 class="prev-next-title u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" class="u-relative zindex3">{{.itemPrevious.Title}}</a></h2>
+            <h2 class="prev-next-title u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemPrevious.ImageUrl }}" class="u-relative zindex3">{{.itemPrevious.Title}}</a></h2>
           </div>
 
-          <a href="/{{.itemPrevious.Date.DayMonthDir}}/{{.itemPrevious.Href}}" aria-label="{{.itemPrevious.Title}}" class="u-absolute0 zindex2"></a>
+          <a href="/{{.itemPrevious.ImageUrl }}" aria-label="{{.itemPrevious.Title}}" class="u-absolute0 zindex2"></a>
         </div>
         
         <div class="u-flex u-relative godo-tracking "
              data-event-category="Article"
              data-event-action="Next photo"
-             data-event-label="https://photos.chmouel.com/view/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}"
+             data-event-label="https://photos.chmouel.com/view/{{.itemNext.ImageUrl }}"
              data-event-non-interaction="true">
-            <a href="/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}"
+            <a href="/{{ .itemNext.ImageUrl }}"
                class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemNext.Title}}">
-              <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Image}}" alt="{{.itemNext.Title}}"/>
+              <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemNext.ImagePath }}" alt="{{.itemNext.Title}}"/>
                   </a>
 
                   <div class="prev-next-body u-paddingLeft20 u-flex1">
                     <div class="u-fontSizeSmaller u-lineHeight1 u-textMuted u-marginBottom10">Next photo</div>
-                    <h2 class="prev-next-Symbol’s function definition is void: yas-with-commentitle u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}" class="u-relative zindex3">{{.itemNext.Title}}</a></h2>
+                    <h2 class="prev-next-Symbol’s function definition is void: yas-with-commentitle u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemNext.ImageUrl }}" class="u-relative zindex3">{{.itemNext.Title}}</a></h2>
                     <p class="prev-next-excerpt u-fontSizeSmall u-textMuted u-lineClamp2 u-lineHeightTight"></p>
                   </div>
                   
-                  <a href="/{{.itemNext.Date.DayMonthDir}}/{{.itemNext.Href}}" aria-label="{{.itemNext.Title}}" class="u-absolute0 zindex2"></a>
+                  <a href="/{{.itemNext.ImageUrl }}" aria-label="{{ .itemNext.Title }}" class="u-absolute0 zindex2"></a>
                 </div>
         </div>
         <hr>
@@ -270,7 +270,7 @@
     <div class="share-sticky u-textAlignRight is-visible">
     <div class="share-sticky-wrap buttonSet u-container u-maxWidth1200">
         <span class="u-textMuted u-fontSize15 u-paddingRight10 u-hide-before-md">Share this article:</span>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=https://photos.chmouel.com/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}"
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://photos.chmouel.com/view/{{.item.ImageUrl }}"
            target="_blank"
            rel="noopener noreferrer"
            title="Share on Facebook"
@@ -282,7 +282,7 @@
             <svg class="icon"><use xlink:href="#icon-facebook"></use></svg>
             Share
         </a>
-        <a href="https://twitter.com/share?text=Back%20from%20holiday&amp;url=https://photos.chmouel.com/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}"
+        <a href="https://twitter.com/share?text=Back%20from%20holiday&amp;url=https://photos.chmouel.com/view/{{.item.ImageUrl }}"
            target="_blank"
            rel="noopener noreferrer"
            title="Share on Twitter"
@@ -294,7 +294,7 @@
             <svg class="icon"><use xlink:href="#icon-twitter"></use></svg>
             Tweet
         </a>
-        <a href="whatsapp://send?text=https://photos.chmouel.com/view/{{.item.Date.DayMonthDir}}/{{.item.Href}}"
+        <a href="whatsapp://send?text=https://photos.chmouel.com/view/{{.item.ImageUrl }}"
            target="_blank"
            rel="noopener noreferrer"
            class="godo-tracking button button--s u-textColorWhite bg-whatsapp u-hide-after-lg"
