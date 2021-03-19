@@ -1,11 +1,9 @@
 package photos
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -19,40 +17,34 @@ import (
 	"github.com/tjarratt/babble"
 )
 
-type Item struct {
-	Image       string         `json:"image"`
-	Href        string         `json:"href"`
-	Title       string         `json:"title"`
-	Description string         `json:"description"`
-	Date        SimpleJsonDate `json:"date"`
-}
-
 var (
 	/// HOST where to bind the upload
 	host         = "localhost"
 	port         = "8483"
 	htmlDir      = "/home/www/photos"
+	dbPath       = "/home/www/photos/photos.db"
 	imagePerPage = 9
 )
 
 func index(c echo.Context) error {
-	config, err := readConfig()
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "We could not read config???.")
-	}
-
+	var items []Item
+	db.Order("created_at desc").Limit(imagePerPage).Find(&items)
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
-		"items": config[0:imagePerPage],
+		"items": items,
 	})
 }
 
 func page(c echo.Context) error {
-	config, err := readConfig()
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "We could not read config???.")
-	}
+	var items []Item
+	var allitemscount int64
 
 	pageint, err := strconv.Atoi(c.Param("page"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Is this page a real page??.")
+	}
+
+	db.Order("created_at desc").Find(&[]Item{}).Count(&allitemscount)
+	db.Order("created_at desc").Limit(imagePerPage).Offset(pageint * imagePerPage).Find(&items)
 
 	var pagePrevious = ""
 	if pageint > 2 {
@@ -60,51 +52,39 @@ func page(c echo.Context) error {
 	}
 
 	var pageNext = fmt.Sprintf("page/%d", pageint+1)
-	if (pageint*imagePerPage)+imagePerPage > len(config) {
+	if (pageint*imagePerPage)+imagePerPage > int(allitemscount) {
 		pageNext = ""
-	}
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Is this page a real page??.")
 	}
 
 	return c.Render(http.StatusOK, "indexpp.html", map[string]interface{}{
 		"pageNext":     pageNext,
 		"pagePrevious": pagePrevious,
 		"pageCurrent":  pageint,
-		"items":        getchunk(pageint, config),
+		"items":        items,
 	})
 }
 
 func view(c echo.Context) error {
-	config, err := readConfig()
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "We could not read config???.")
-	}
-	photo := c.Param("photo")
-	yearMonth := fmt.Sprintf("%s/%s", c.Param("year"), c.Param("month"))
+	var item Item
+	var itemPrevious Item
+	var items []Item
+	var itemNext Item
 
-	var item = Item{}
-	var itemNext = Item{}
-	var itemPrevious = Item{}
-	for i, value := range config {
-		if value.Date.Format("2006/01") == yearMonth && value.Href == photo {
-			item = value
-			if i+1 < len(config) {
-				itemNext = config[i+1]
-			} else {
-				itemNext = config[0]
-			}
-			if i == 0 {
-				itemPrevious = config[len(config)-1]
-			} else {
-				itemPrevious = config[i-1]
-			}
+	// This is buggy, I guess we will have to grab everything and do as before.
+	db.Raw("select photo.* from photos as photo where photo.id >= (select id-1 from photos where href=?) order by photo.id asc, created_at desc limit 3;", c.Param("href")).Scan(&items)
 
-		}
-	}
-
-	if item.Href == "" {
-		return echo.NewHTTPError(http.StatusInternalServerError, "I no nothing about this photo???.")
+	if len(items) == 3 && items[0].Href == c.Param("href") {
+		db.Last(&itemPrevious)
+		item = items[0]
+		itemNext = items[1]
+	} else if len(items) == 3 {
+		itemPrevious = items[0]
+		item = items[1]
+		itemNext = items[2]
+	} else if len(items) == 2 && items[1].Href == c.Param("href") {
+		itemPrevious = items[0]
+		item = items[1]
+		db.Where("id=1").First(&itemNext)
 	}
 
 	return c.Render(http.StatusOK, "view.html", map[string]interface{}{
@@ -183,22 +163,30 @@ func upload(c echo.Context) error {
 		return err
 	}
 
-	items, err := readConfig()
-	if err != nil {
-		return err
-	}
-
 	newitem := Item{
 		Image:       fname,
 		Href:        href,
 		Description: description,
-		Date:        SimpleJsonDate{timef},
 		Title:       title,
 	}
-	items = append([]Item{newitem}, items...)
-	configFP, _ := json.MarshalIndent(items, "", " ")
-	err = ioutil.WriteFile(filepath.Join(htmlDir, "config.json"), configFP, 0644)
-	if err != nil {
+
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	if err := tx.Create(&newitem).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Commit().Error; err != nil {
 		return err
 	}
 
@@ -207,37 +195,7 @@ func upload(c echo.Context) error {
 		return err
 	}
 
-	// return c.HTML(http.StatusOK, "<b>Uploaded!<b>")
 	return c.Redirect(http.StatusMovedPermanently, "/")
-}
-
-func getchunk(page int, items []Item) []Item {
-	var cnt = 0
-
-	for i := 0; i < len(items); i += imagePerPage {
-		end := i + imagePerPage
-		if end > len(items) {
-			end = len(items)
-		}
-		if cnt == page {
-			return items[i:end]
-		}
-		cnt++
-	}
-	return []Item{}
-}
-
-func readConfig() ([]Item, error) {
-	var items []Item
-
-	configJson, err := os.Open(filepath.Join(htmlDir, "config.json"))
-	if err != nil {
-		return items, err
-	}
-	defer configJson.Close()
-	byteValue, _ := ioutil.ReadAll(configJson)
-	json.Unmarshal(byteValue, &items)
-	return items, nil
 }
 
 // TemplateRenderer is a custom html/template renderer for Echo framework
@@ -264,6 +222,15 @@ func Server() (err error) {
 		templates: template.Must(template.ParseGlob(filepath.Join(htmlDir, "html", "*.html"))),
 	}
 
+	db, err = NewDB(getOrEnv("PHOTOS_DB", dbPath))
+	if err != nil {
+		return
+	}
+	if os.Getenv("PHOTOS_DEBUG") != "" {
+		db.Debug()
+	}
+	db.AutoMigrate(&Item{})
+
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
 		Level: 5,
@@ -278,7 +245,7 @@ func Server() (err error) {
 	})
 	e.POST("/upload", upload)
 	e.GET("/page/:page", page)
-	e.GET("/:year/:month/:photo", view)
+	e.GET("/:year/:month/:href", view)
 	e.GET("/", index)
 
 	return (e.Start(
