@@ -20,11 +20,11 @@ func Generate() error {
 	}
 
 	for _, item := range items {
-		orig := filepath.Join(htmlDir, "content", "images", item.Date.Format("2006/01"), item.Image)
+		orig := filepath.Join(htmlDir, "content", "images", item.CreatedAt.Format("2006/01"), item.Image)
 		if _, err := os.Stat(orig); os.IsNotExist(err) {
 			return errors.New(item.Href + " doesnt exist. clean your json.")
 		}
-		err = resize(filepath.Join(item.Date.DayMonthDir(), item.Image))
+		err = resize(filepath.Join(item.CreatedAt.Format("2006/01"), item.Image))
 		if err != nil {
 			return err
 		}
