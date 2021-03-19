@@ -28,7 +28,7 @@ var (
 
 func index(c echo.Context) error {
 	var items []Item
-	db.Limit(imagePerPage).Find(&items)
+	db.Order("created_at desc").Limit(imagePerPage).Find(&items)
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
 		"items": items,
 	})
@@ -43,8 +43,8 @@ func page(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Is this page a real page??.")
 	}
 
-	db.Find(&[]Item{}).Count(&allitemscount)
-	db.Limit(imagePerPage).Offset(pageint * imagePerPage).Find(&items)
+	db.Order("created_at desc").Find(&[]Item{}).Count(&allitemscount)
+	db.Order("created_at desc").Limit(imagePerPage).Offset(pageint * imagePerPage).Find(&items)
 
 	var pagePrevious = ""
 	if pageint > 2 {
@@ -70,7 +70,8 @@ func view(c echo.Context) error {
 	var items []Item
 	var itemNext Item
 
-	db.Raw("select photo.* from photos as photo where photo.id >= (select id-1 from photos where href=?) order by photo.id asc limit 3;", c.Param("href")).Scan(&items)
+	// This is buggy, I guess we will have to grab everything and do as before.
+	db.Raw("select photo.* from photos as photo where photo.id >= (select id-1 from photos where href=?) order by photo.id asc, created_at desc limit 3;", c.Param("href")).Scan(&items)
 
 	if len(items) == 3 && items[0].Href == c.Param("href") {
 		db.Last(&itemPrevious)
