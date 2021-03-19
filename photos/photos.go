@@ -1,11 +1,9 @@
 package photos
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -75,7 +73,7 @@ func view(c echo.Context) error {
 	db.Raw("select photo.* from photos as photo where photo.id >= (select id-1 from photos where href=?) order by photo.id asc limit 3;", c.Param("href")).Scan(&items)
 
 	if len(items) == 3 && items[0].Href == c.Param("href") {
-		db.Raw("select * from photos where id = (select max(id) from photos)").Scan(&itemPrevious)
+		db.Last(&itemPrevious)
 		item = items[0]
 		itemNext = items[1]
 	} else if len(items) == 3 {
@@ -164,21 +162,30 @@ func upload(c echo.Context) error {
 		return err
 	}
 
-	items, err := readConfig()
-	if err != nil {
-		return err
-	}
-
 	newitem := Item{
 		Image:       fname,
 		Href:        href,
 		Description: description,
 		Title:       title,
 	}
-	items = append([]Item{newitem}, items...)
-	configFP, _ := json.MarshalIndent(items, "", " ")
-	err = ioutil.WriteFile(filepath.Join(htmlDir, "config.json"), configFP, 0644)
-	if err != nil {
+
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	if err := tx.Create(&newitem).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Commit().Error; err != nil {
 		return err
 	}
 
@@ -187,21 +194,7 @@ func upload(c echo.Context) error {
 		return err
 	}
 
-	// return c.HTML(http.StatusOK, "<b>Uploaded!<b>")
 	return c.Redirect(http.StatusMovedPermanently, "/")
-}
-
-func readConfig() ([]Item, error) {
-	var items []Item
-
-	configJson, err := os.Open(filepath.Join(htmlDir, "config.json"))
-	if err != nil {
-		return items, err
-	}
-	defer configJson.Close()
-	byteValue, _ := ioutil.ReadAll(configJson)
-	json.Unmarshal(byteValue, &items)
-	return items, nil
 }
 
 // TemplateRenderer is a custom html/template renderer for Echo framework
