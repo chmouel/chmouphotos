@@ -2,7 +2,9 @@ package photos
 
 import (
 	"fmt"
+	"os"
 
+	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -28,6 +30,14 @@ func (i Item) ImagePath() string {
 
 func (Item) TableName() string { return "photos" }
 
-func NewDB(dbpath string) (*gorm.DB, error) {
-	return gorm.Open(sqlite.Open(dbpath), &gorm.Config{})
+func NewDB(dsn string) (*gorm.DB, error) {
+	var openning gorm.Dialector
+
+	if _, err := os.Stat(dsn); os.IsNotExist(err) {
+		openning = mysql.Open(dsn)
+	} else {
+		openning = sqlite.Open(dsn)
+	}
+
+	return gorm.Open(openning, &gorm.Config{})
 }
