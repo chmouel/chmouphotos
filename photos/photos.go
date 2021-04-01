@@ -226,6 +226,11 @@ func Server() (err error) {
 	if err != nil {
 		return
 	}
+	defer func() {
+		dbConn, _ := db.DB()
+		dbConn.Close()
+	}()
+
 	if os.Getenv("PHOTOS_DEBUG") != "" {
 		db.Debug()
 	}
