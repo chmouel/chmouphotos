@@ -17,7 +17,7 @@ I still wanted to use the excellent theme from
 [GodoFreddo](https://godofredo.ninja) and didn't need a lot of the fancy
 editing features from Ghost, since I just need only a few metadatas.
 
-The picutres are stored in a sqlite or mysql DB, the schemas is simple see the Item 
+The pictures are stored in a sqlite or mysql DB, the schemas is simple see the Item
 structure in [photos/data.go](./photos/data.go) for the structure.
 
 It takes it and serves the pages via a custom golang server.
@@ -58,7 +58,7 @@ the snippet from my config :
 It's probably not reusable as is yet, but you can inspire yourself by it if you
 move a Ghost website to a static config.
 
-Things should be pretty quick, if it isn't I probably would be adding static 
+Things should be pretty quick, if it isn't I probably would be adding static
 html caching...
 
 ## Upload
@@ -73,11 +73,11 @@ debianies distros for the american word list
 
 ## Bugs/Ideas
 
-* Doens't start up if you don't have the fill up the DB with 6 items already 
-* Connect with Google Photos API, grab favourites or some other forms and
+- Doensn't start up if you don't have the fill up the DB with 6 items already
+- Connect with Google Photos API, grab favourites or some other forms and
   generate from there?
-* Full on static ? Upload on CI from a GIT project?
-* When uploading add the status of the resizing which may take up to a minute on
+- Full on static ? Upload on CI from a GIT project?
+- When uploading add the status of the resizing which may take up to a minute on
   small rpi.
-* Add disabled field to disable an entry without removing it.
-* Use webp instead of jpeg?
+- Add disabled field to disable an entry without removing it.
+- Use webp instead of jpeg?
