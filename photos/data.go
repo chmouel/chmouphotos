@@ -29,7 +29,5 @@ func (i Item) ImagePath() string {
 func (Item) TableName() string { return "photos" }
 
 func NewDB(dsn string) (*gorm.DB, error) {
-	var openning gorm.Dialector
-	openning = mysql.Open(dsn)
-	return gorm.Open(openning, &gorm.Config{})
+	return gorm.Open(mysql.Open(dsn), &gorm.Config{})
 }

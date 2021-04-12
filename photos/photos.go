@@ -217,7 +217,10 @@ func Server() (err error) {
 	if os.Getenv("PHOTOS_DEBUG") != "" {
 		db.Debug()
 	}
-	db.AutoMigrate(&Item{})
+	err = db.AutoMigrate(&Item{})
+	if err != nil {
+		return
+	}
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{

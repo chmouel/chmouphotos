@@ -1,3 +1,6 @@
+lint:
+	@golangci-lint run 
+
 rdeploy:
 	@./hack/rdeploy.sh
 
