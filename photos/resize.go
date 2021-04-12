@@ -19,7 +19,10 @@ func Generate() error {
 		if _, err := os.Stat(orig); os.IsNotExist(err) {
 			return errors.New(item.Href + " doesnt exist. clean your json.")
 		}
-		resize(filepath.Join(item.CreatedAt.Format("2006/01"), item.Image))
+		err := resize(filepath.Join(item.CreatedAt.Format("2006/01"), item.Image))
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
