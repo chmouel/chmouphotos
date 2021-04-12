@@ -1,4 +1,4 @@
-# ChmouPhotos
+# ChmouPhotos - A simple photos website
 
 Website for <https://photos.chmouel.com>
 
