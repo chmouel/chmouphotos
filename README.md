@@ -2,6 +2,12 @@
 
 Website for <https://photos.chmouel.com>
 
+## ScreenShot
+
+<img width="1351" alt="image" src="https://user-images.githubusercontent.com/98980/113452108-a345b780-9403-11eb-9f6d-50f96d7aa24b.png">
+
+## Description
+
 This used to be a Ghost website but it was becoming too heavy for my rpi. My
 issues was with the nodejs files was killing my SD card when updating, consumes
 more than 1GB of mem to just install the damn thing and pretty heavy on RAM
@@ -11,19 +17,22 @@ I still wanted to use the excellent theme from
 [GodoFreddo](https://godofredo.ninja) and didn't need a lot of the fancy
 editing features from Ghost, since I just need only a few metadatas.
 
-The picutres are stored in a sqlite DB, the schemas is simple see
-[photos/data.go][./photos/data.go] for the structure.
+The pictures are stored in a DB in a sqlite file or mysql DB (faster on RPI), 
+the schemas is simple see the Item structure in [photos/data.go](./photos/data.go) 
+if you wanted to dig it out.
 
-It takes it and serve the pages via a custom golang server.
+It takes the information from the DB and serves the pages via a custom golang server.
 
-Probably could be a pure static site but I want to do an uploader that does the
+Probably could be a pure static site but I wanted to have an uploader that does the
 resizing and such and being more dynamic while on the road/phone. Maybe in the
-future, it's fun to experiment.
+future if this website (which currently only receives bots and my own hitview) gets popular.
+
+## Setup
 
 The service is served under [systemd](./systemd/chmouphoto.service) and only
-consumes a few MBS,
+consumes a few MBS.
 
-Nginx serves the assets and images and pass thru for the other stuff, here is
+Nginx serves the assets and images and proxy thru for the html stuff, here is
 the snippet from my config :
 
 ```conf
@@ -50,6 +59,9 @@ the snippet from my config :
 It's probably not reusable as is yet, but you can inspire yourself by it if you
 move a Ghost website to a static config.
 
+Things should be pretty quick, if it isn't I probably could add some simple HIT/MISS static
+html caching...
+
 ## Upload
 
 There is a simple upload page available in `/upload`, it's up to you to protect it
@@ -62,10 +74,11 @@ debianies distros for the american word list
 
 ## Bugs/Ideas
 
-* Connect with Google Photos API, grab favourites or some other forms and
+- Currently does not start up if you don't have your DB filed-up with 6 items already
+- Connect with Google Photos API, grab favourites or some other forms and
   generate from there?
-* Full on static ? Upload on CI from a GIT project?
-* When uploading add the status of the resizing which may take up to a minute on
+- Full on static ? Upload on CI from a GIT project?
+- When uploading add the status of the resizing which may take up to a minute on
   small rpi.
-* Add disabled field to disable an entry without removing it.
-* Use webp instead of jpeg?
+- Add disabled field to disable an entry without removing it.
+- Use webp instead of jpeg?
