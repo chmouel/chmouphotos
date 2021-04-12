@@ -220,38 +220,24 @@
       <div class="post-tags buttonSet u-marginTop30">
       </div>
       <hr>
-      <div class="prev-next">
-          <div class="u-flex u-relative godo-tracking u-marginBottom30" data-event-category="Article" data-event-action="Previous photo"    data-event-label="https://photos.chmouel.com/view/{{.itemPrevious.ImageUrl }}" data-event-non-interaction="true">
-
-              <a href="/{{.itemPrevious.ImageUrl }}" class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemPrevious.Title}}">
-            <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemPrevious.ImagePath }}" alt="{{.itemPrevious.Title}}"/>
-          </a>
-
-          <div class="prev-next-body u-paddingLeft20 u-flex1">
-            <div class="u-fontSizeSmaller u-lineHeight1 u-textMuted u-marginBottom10">Previous photo</div>
-            <h2 class="prev-next-title u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemPrevious.ImageUrl }}" class="u-relative zindex3">{{.itemPrevious.Title}}</a></h2>
-          </div>
-
-          <a href="/{{.itemPrevious.ImageUrl }}" aria-label="{{.itemPrevious.Title}}" class="u-absolute0 zindex2"></a>
-        </div>
         
         <div class="u-flex u-relative godo-tracking "
              data-event-category="Article"
              data-event-action="Next photo"
-             data-event-label="https://photos.chmouel.com/view/{{.itemNext.ImageUrl }}"
+             data-event-label="https://photos.chmouel.com/view/{{.itemRandom.ImageUrl }}"
              data-event-non-interaction="true">
-            <a href="/{{ .itemNext.ImageUrl }}"
-               class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemNext.Title}}">
-              <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemNext.ImagePath }}" alt="{{.itemNext.Title}}"/>
+            <a href="/{{ .itemRandom.ImageUrl }}"
+               class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0" aria-label="{{.itemRandom.Title}}">
+              <img class="u-absolute u-image blur-up lazyload" data-src="/content/images/size/w300/{{.itemRandom.ImagePath }}" alt="{{.itemRandom.Title}}"/>
                   </a>
 
                   <div class="prev-next-body u-paddingLeft20 u-flex1">
-                    <div class="u-fontSizeSmaller u-lineHeight1 u-textMuted u-marginBottom10">Next photo</div>
-                    <h2 class="prev-next-Symbol’s function definition is void: yas-with-commentitle u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemNext.ImageUrl }}" class="u-relative zindex3">{{.itemNext.Title}}</a></h2>
+                    <div class="u-fontSizeSmaller u-lineHeight1 u-textMuted u-marginBottom10">Another photo</div>
+                    <h2 class="prev-next-Symbol’s function definition is void: yas-with-commentitle u-contentTitle u-marginBottom10 u-fontSize21"><a href="/{{.itemRandom.ImageUrl }}" class="u-relative zindex3">{{.itemRandom.Title}}</a></h2>
                     <p class="prev-next-excerpt u-fontSizeSmall u-textMuted u-lineClamp2 u-lineHeightTight"></p>
                   </div>
                   
-                  <a href="/{{.itemNext.ImageUrl }}" aria-label="{{ .itemNext.Title }}" class="u-absolute0 zindex2"></a>
+                  <a href="/{{.itemRandom.ImageUrl }}" aria-label="{{ .itemRandom.Title }}" class="u-absolute0 zindex2"></a>
                 </div>
         </div>
         <hr>
