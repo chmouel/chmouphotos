@@ -66,31 +66,14 @@ func page(c echo.Context) error {
 
 func view(c echo.Context) error {
 	var item Item
-	var itemPrevious Item
-	var items []Item
-	var itemNext Item
+	var itemRandom Item
 
-	// This is buggy, I guess we will have to grab everything and do as before.
-	db.Raw("select photo.* from photos as photo where photo.id >= (select id-1 from photos where href=?) order by photo.id asc, created_at desc limit 3;", c.Param("href")).Scan(&items)
-
-	if len(items) == 3 && items[0].Href == c.Param("href") {
-		db.Last(&itemPrevious)
-		item = items[0]
-		itemNext = items[1]
-	} else if len(items) == 3 {
-		itemPrevious = items[0]
-		item = items[1]
-		itemNext = items[2]
-	} else if len(items) == 2 && items[1].Href == c.Param("href") {
-		itemPrevious = items[0]
-		item = items[1]
-		db.Where("id=1").First(&itemNext)
-	}
+	db.Where("href=?", c.Param("href")).First(&item)
+	db.Debug().Order("RAND()").Not(map[string]interface{}{"href": []string{c.Param("href")}}).First(&itemRandom)
 
 	return c.Render(http.StatusOK, "view.html", map[string]interface{}{
-		"item":         item,
-		"itemNext":     itemNext,
-		"itemPrevious": itemPrevious,
+		"item":       item,
+		"itemRandom": itemRandom,
 	})
 }
 
