@@ -17,9 +17,8 @@ I still wanted to use the excellent theme from
 [GodoFreddo](https://godofredo.ninja) and didn't need a lot of the fancy
 editing features from Ghost, since I just need only a few metadatas.
 
-The pictures are stored in a DB in a sqlite file or mysql DB (faster on RPI), 
-the schemas is simple see the Item structure in [photos/data.go](./photos/data.go) 
-if you wanted to dig it out.
+The pictures are stored in a DB as [supported by Gorm
+](https://gorm.io/docs/connecting_to_the_database.html) with simple schemas.
 
 It takes the information from the DB and serves the pages via a custom golang server.
 
@@ -61,6 +60,21 @@ move a Ghost website to a static config.
 
 Things should be pretty quick, if it isn't I probably could add some simple HIT/MISS static
 html caching...
+
+## Config
+
+Uses environment variable to configure the service (which makes it easy to plug
+in cloud native environement). 
+
+Environement variables are : 
+
+* **PHOTOS_HTML_DIRECTORY**: Html directory of content, asset and html (required)
+* **PHOTOS_DB**: The database DSN to connect see [gorm
+  documentation](https://gorm.io/docs/connecting_to_the_database.html)
+  (required)
+* **PHOTOS_HOST**: The host where the service will bind (default: **127.0.0.1**)
+* **PHOTOS_PORT**: The port where the service will bind (default: **8483**)
+
 
 ## Upload
 
