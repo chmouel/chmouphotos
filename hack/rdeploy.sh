@@ -11,6 +11,6 @@ targetDir="~/GIT/chmouphotos"
 git push
 
 
-env GOOS=linux GOARCH=arm GOARM=7 go build -o /tmp/rpi-chmouphoto
+env GOOS=linux GOARCH=arm GOARM=7 go build -o /tmp/rpi-chmouphotos
 scp /tmp/rpi-chmouphotos ${rpi}:/tmp/chmouphotos
 ssh ${rpi} "cd ${targetDir};./hack/redeploy.sh"
