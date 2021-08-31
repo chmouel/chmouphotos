@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-rpi=pi.lan
+rpi=kodi
 targetDir="~/GIT/chmouphoto"
 [[ -n "$(git status --porcelain=v1)" ]] && {
     echo "You have local change(s), commit push them first"
@@ -11,7 +11,7 @@ targetDir="~/GIT/chmouphoto"
 git push
 
 
-env GOOS=linux GOARCH=arm GOARM=5 go build -o /tmp/rpi-chmouphoto
+env GOOS=linux GOARCH=arm GOARM=7 go build -o /tmp/rpi-chmouphoto
 scp /tmp/rpi-chmouphoto ${rpi}:/tmp/chmouphoto
 ssh ${rpi} "cd ${targetDir};./hack/redeploy.sh"
 
