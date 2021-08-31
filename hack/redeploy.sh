@@ -3,8 +3,8 @@ set -x
 set -e
 
 git pull 
-[[ -x /tmp/chmouphoto ]] || time /usr/local/go/bin/go build -o /tmp/chmouphoto main.go 
+[[ -x /tmp/chmouphotos ]] || time /usr/local/go/bin/go build -o /tmp/chmouphoto main.go 
 sudo systemctl stop chmouphotos
-sudo mv /tmp/chmouphoto /usr/local/bin/chmouphoto 
+sudo mv /tmp/chmouphotos /usr/local/bin/chmouphotos
 sudo systemctl start chmouphotos
 journalctl -u chmouphotos.service --lines=10 --no-pager
