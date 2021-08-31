@@ -1,5 +1,7 @@
 # ChmouPhotos - A simple photos website
 
+[![GolangCI Status](https://github.com/chmouel/chmouphotos/workflows/golangci-lint/badge.svg)](https://github.com/chmouel/chmouphotos/actions)
+
 Website for <https://photos.chmouel.com>
 
 ## ScreenShot
