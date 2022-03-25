@@ -1,22 +1,26 @@
 package gorm
 
 import (
+	"reflect"
+
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
 )
 
 // Migrator returns migrator
 func (db *DB) Migrator() Migrator {
+	tx := db.getInstance()
+
 	// apply scopes to migrator
-	for len(db.Statement.scopes) > 0 {
-		scopes := db.Statement.scopes
-		db.Statement.scopes = nil
+	for len(tx.Statement.scopes) > 0 {
+		scopes := tx.Statement.scopes
+		tx.Statement.scopes = nil
 		for _, scope := range scopes {
-			db = scope(db)
+			tx = scope(tx)
 		}
 	}
 
-	return db.Dialector.Migrator(db.Session(&Session{}))
+	return tx.Dialector.Migrator(tx.Session(&Session{}))
 }
 
 // AutoMigrate run auto migration for given models
@@ -31,14 +35,23 @@ type ViewOption struct {
 	Query       *DB
 }
 
+// ColumnType column type interface
 type ColumnType interface {
 	Name() string
-	DatabaseTypeName() string
+	DatabaseTypeName() string                 // varchar
+	ColumnType() (columnType string, ok bool) // varchar(64)
+	PrimaryKey() (isPrimaryKey bool, ok bool)
+	AutoIncrement() (isAutoIncrement bool, ok bool)
 	Length() (length int64, ok bool)
 	DecimalSize() (precision int64, scale int64, ok bool)
 	Nullable() (nullable bool, ok bool)
+	Unique() (unique bool, ok bool)
+	ScanType() reflect.Type
+	Comment() (value string, ok bool)
+	DefaultValue() (value string, ok bool)
 }
 
+// Migrator migrator interface
 type Migrator interface {
 	// AutoMigrate
 	AutoMigrate(dst ...interface{}) error
@@ -52,6 +65,7 @@ type Migrator interface {
 	DropTable(dst ...interface{}) error
 	HasTable(dst interface{}) bool
 	RenameTable(oldName, newName interface{}) error
+	GetTables() (tableList []string, err error)
 
 	// Columns
 	AddColumn(dst interface{}, field string) error
