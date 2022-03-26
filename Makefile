@@ -1,11 +1,14 @@
+.PHONY: vendor
+vendor:
+	@go mod vendor && go mod tidy
 lint:
-	@golangci-lint run 
+	@golangci-lint run
 
-rdeploy:
+deploy:
 	@./hack/rdeploy.sh
 
 dev:
-	@while true;do reflex -s -r ".*\.(html|go)$$" go run main.go;read -t1;done	
+	@while true;do reflex -s -r ".*\.(html|go)$$" go run main.go;read -t1;done
 
 setup-dev:
 	@./hack/setup-local-dev.sh

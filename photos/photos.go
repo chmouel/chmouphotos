@@ -22,7 +22,6 @@ var (
 	host         = "localhost"
 	port         = "8483"
 	htmlDir      = "/home/www/photos"
-	dbPath       = "/home/www/photos/photos.db"
 	imagePerPage = 9
 )
 
@@ -46,12 +45,12 @@ func page(c echo.Context) error {
 	db.Order("created_at desc").Find(&[]Item{}).Count(&allitemscount)
 	db.Order("created_at desc").Limit(imagePerPage).Offset(pageint * imagePerPage).Find(&items)
 
-	var pagePrevious = ""
+	pagePrevious := ""
 	if pageint > 2 {
 		pagePrevious = fmt.Sprintf("page/%d", pageint-1)
 	}
 
-	var pageNext = fmt.Sprintf("page/%d", pageint+1)
+	pageNext := fmt.Sprintf("page/%d", pageint+1)
 	if (pageint*imagePerPage)+imagePerPage > int(allitemscount) {
 		pageNext = ""
 	}
@@ -132,7 +131,7 @@ func upload(c echo.Context) error {
 	}
 	fmt.Printf("%s %s %s \n", fpath, fname, href)
 
-	err = os.MkdirAll(filepath.Dir(fpath), 0755)
+	err = os.MkdirAll(filepath.Dir(fpath), 0o755)
 	if err != nil {
 		return err
 	}
@@ -187,7 +186,6 @@ type TemplateRenderer struct {
 }
 
 func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
@@ -205,22 +203,22 @@ func Server() (err error) {
 		templates: template.Must(template.ParseGlob(filepath.Join(htmlDir, "html", "*.html"))),
 	}
 
-	db, err = NewDB(getOrEnv("PHOTOS_DB", dbPath))
-	if err != nil {
-		return
-	}
-	defer func() {
-		dbConn, _ := db.DB()
-		dbConn.Close()
-	}()
+	// db, err = NewDB(getOrEnv("PHOTOS_DB", dbPath))
+	// if err != nil {
+	// 	return
+	// }
+	// defer func() {
+	// 	dbConn, _ := db.DB()
+	// 	dbConn.Close()
+	// }()
 
-	if os.Getenv("PHOTOS_DEBUG") != "" {
-		db.Debug()
-	}
-	err = db.AutoMigrate(&Item{})
-	if err != nil {
-		return
-	}
+	// if os.Getenv("PHOTOS_DEBUG") != "" {
+	// 	db.Debug()
+	// }
+	// err = db.AutoMigrate(&Item{})
+	// if err != nil {
+	// 	return
+	// }
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
@@ -234,6 +232,7 @@ func Server() (err error) {
 	e.GET("/upload", func(c echo.Context) error {
 		return c.Render(http.StatusOK, "upload.html", map[string]interface{}{})
 	})
+	e.POST("/webhook", webhook)
 	e.POST("/upload", upload)
 	e.GET("/page/:page", page)
 	e.GET("/:year/:month/:href", view)

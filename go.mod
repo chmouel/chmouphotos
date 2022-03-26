@@ -3,6 +3,7 @@ module github.com/chmouel/photoschmouel
 go 1.15
 
 require (
+	github.com/google/go-github/v43 v43.0.0
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/mattn/go-colorable v0.1.12 // indirect
