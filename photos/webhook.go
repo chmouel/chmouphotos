@@ -7,12 +7,17 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/google/go-github/v43/github"
 	"github.com/labstack/echo/v4"
 )
 
-const blogRepository = "/home/www/chmouel/photos"
+const (
+	blogRepository      = "/home/www/chmouel/photos"
+	defaultTargetBranch = "main"
+	defaultTargetBlog   = "chmouel/blog"
+)
 
 func run(dir, cmd string, args ...string) (string, error) {
 	gitPath, err := exec.LookPath(cmd)
@@ -36,7 +41,19 @@ func run(dir, cmd string, args ...string) (string, error) {
 }
 
 func process(event *github.PushEvent) {
-	sha := event.Commits[0].ID
+	sha := event.Commits[0].GetID()
+	tbranch := getOrEnv("WEBHOOK_TARGET_BRANCH", defaultTargetBranch)
+	if filepath.Base(event.GetRef()) != tbranch {
+		log.Printf("Target branch %s is not targetting the branch we want: %s", event.GetRef(), tbranch)
+		return
+	}
+	tblog := getOrEnv("WEBHOOK_TARGET_BLOG", defaultTargetBlog)
+	if event.Repo.GetFullName() != tblog {
+		log.Printf("Target blog %s is not targetting the blog name we want: %s", event.Repo.GetFullName(), tblog)
+		return
+
+	}
+
 	blogDir := getOrEnv("BLOG_REPOSITORY", blogRepository)
 	output, err := run(blogDir, "git", "fetch", "-a", "origin")
 	if output != "" {
@@ -47,7 +64,7 @@ func process(event *github.PushEvent) {
 		return
 	}
 
-	output, err = run(blogDir, "git", "reset", "--hard", *sha)
+	output, err = run(blogDir, "git", "reset", "--hard", sha)
 	if output != "" {
 		log.Println(output)
 	}
