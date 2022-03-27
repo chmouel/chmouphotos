@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 
 	"github.com/google/go-github/v43/github"
 	"github.com/labstack/echo/v4"
@@ -17,6 +18,7 @@ const (
 	blogRepository      = "/home/www/chmouel/photos"
 	defaultTargetBranch = "main"
 	defaultTargetBlog   = "chmouel/blog"
+	shaRegexp           = `^([a-z0-9A-Z]{3,40})$`
 )
 
 func run(dir, cmd string, args ...string) (string, error) {
@@ -41,7 +43,19 @@ func run(dir, cmd string, args ...string) (string, error) {
 }
 
 func process(event *github.PushEvent) {
+	re, err := regexp.Compile(shaRegexp)
+	if err != nil {
+		fmt.Println(err.Error)
+		return
+	}
+
+	// just in case of script kiddies, we still have webhook secret, but who knows :shrug:
 	sha := event.Commits[0].GetID()
+	if !re.MatchString(sha) {
+		fmt.Println("cannot detect a real sha in payload, are you a hacker?")
+		return
+	}
+
 	tbranch := getOrEnv("WEBHOOK_TARGET_BRANCH", defaultTargetBranch)
 	if filepath.Base(event.GetRef()) != tbranch {
 		log.Printf("Target branch %s is not targetting the branch we want: %s", event.GetRef(), tbranch)
@@ -51,7 +65,6 @@ func process(event *github.PushEvent) {
 	if event.Repo.GetFullName() != tblog {
 		log.Printf("Target blog %s is not targetting the blog name we want: %s", event.Repo.GetFullName(), tblog)
 		return
-
 	}
 
 	blogDir := getOrEnv("BLOG_REPOSITORY", blogRepository)
