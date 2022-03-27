@@ -45,14 +45,14 @@ func run(dir, cmd string, args ...string) (string, error) {
 func process(event *github.PushEvent) {
 	re, err := regexp.Compile(shaRegexp)
 	if err != nil {
-		fmt.Println(err.Error)
+		log.Println(err.Error())
 		return
 	}
 
 	// just in case of script kiddies, we still have webhook secret, but who knows :shrug:
 	sha := event.Commits[0].GetID()
 	if !re.MatchString(sha) {
-		fmt.Println("cannot detect a real sha in payload, are you a hacker?")
+		log.Println("cannot detect a real sha in payload, are you a hacker?")
 		return
 	}
 
