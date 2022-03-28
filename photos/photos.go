@@ -22,6 +22,7 @@ var (
 	host         = "localhost"
 	port         = "8483"
 	htmlDir      = "/home/www/photos"
+	dbPath       = "/home/www/photos/photos.db"
 	imagePerPage = 9
 )
 
@@ -203,22 +204,22 @@ func Server() (err error) {
 		templates: template.Must(template.ParseGlob(filepath.Join(htmlDir, "html", "*.html"))),
 	}
 
-	// db, err = NewDB(getOrEnv("PHOTOS_DB", dbPath))
-	// if err != nil {
-	// 	return
-	// }
-	// defer func() {
-	// 	dbConn, _ := db.DB()
-	// 	dbConn.Close()
-	// }()
+	db, err = NewDB(getOrEnv("PHOTOS_DB", dbPath))
+	if err != nil {
+		return
+	}
+	defer func() {
+		dbConn, _ := db.DB()
+		dbConn.Close()
+	}()
 
-	// if os.Getenv("PHOTOS_DEBUG") != "" {
-	// 	db.Debug()
-	// }
-	// err = db.AutoMigrate(&Item{})
-	// if err != nil {
-	// 	return
-	// }
+	if os.Getenv("PHOTOS_DEBUG") != "" {
+		db.Debug()
+	}
+	err = db.AutoMigrate(&Item{})
+	if err != nil {
+		return
+	}
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
