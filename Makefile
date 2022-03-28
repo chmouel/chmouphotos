@@ -12,3 +12,6 @@ dev:
 
 setup-dev:
 	@./hack/setup-local-dev.sh
+
+fmt:
+	@go fmt ./...
