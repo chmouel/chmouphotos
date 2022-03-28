@@ -49,6 +49,10 @@ func process(event *github.PushEvent) {
 		return
 	}
 
+	if len(event.Commits) == 0 {
+		log.Println("no commit????")
+		return
+	}
 	// just in case of script kiddies, we still have webhook secret, but who knows :shrug:
 	sha := event.Commits[0].GetID()
 	if !re.MatchString(sha) {
