@@ -2,8 +2,6 @@
 github.com/go-sql-driver/mysql
 # github.com/golang-jwt/jwt v3.2.2+incompatible
 github.com/golang-jwt/jwt
-# github.com/google/go-cmp v0.5.7
-## explicit
 # github.com/google/go-github/v43 v43.0.0
 ## explicit
 github.com/google/go-github/v43/github
@@ -69,7 +67,7 @@ golang.org/x/text/unicode/norm
 # golang.org/x/time v0.0.0-20220224211638-0e9765cccd65
 ## explicit
 golang.org/x/time/rate
-# gorm.io/driver/mysql v1.3.2
+# gorm.io/driver/mysql v1.3.3
 ## explicit
 gorm.io/driver/mysql
 # gorm.io/gorm v1.23.3
