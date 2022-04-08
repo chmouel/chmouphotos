@@ -15,3 +15,6 @@ setup-dev:
 
 fmt:
 	@go fmt ./...
+
+static:
+	@go run ./main.go -gen ./html
