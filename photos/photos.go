@@ -76,7 +76,7 @@ func MakeStatic(outputdir string) error {
 	citemcount := 0
 	rand.Seed(time.Now().Unix()) // initialize global pseudo random generator
 	for _, item := range allitems {
-		ti, err := template.ParseFiles(getOrEnv("PHOTOS_HTML_DIRECTORY", htmlDir) + "/view.html")
+		ti, err := template.ParseFiles(filepath.Join("tmpls", "view.html"))
 		if err != nil {
 			return err
 		}
@@ -130,7 +130,7 @@ func MakeStatic(outputdir string) error {
 		}
 
 		// generate template from file
-		t, err := template.ParseFiles(getOrEnv("PHOTOS_HTML_DIRECTORY", htmlDir) + "/indexpp.html")
+		t, err := template.ParseFiles(filepath.Join("tmpls", "indexpp.html"))
 		if err != nil {
 			return err
 		}
@@ -154,7 +154,6 @@ func MakeStatic(outputdir string) error {
 		f.Close()
 		citemcount = 0
 		pagenum += 1
-		fmt.Println(len(items))
 		items = []Item{}
 	}
 	return nil
