@@ -6,11 +6,11 @@ Website for <https://photos.chmouel.com>
 
 ## ScreenShot
 
-<img width="1351" alt="image" src="https://user-images.githubusercontent.com/98980/113452108-a345b780-9403-11eb-9f6d-50f96d7aa24b.png">
+![chmouphotos](https://user-images.githubusercontent.com/98980/113452108-a345b780-9403-11eb-9f6d-50f96d7aa24b.png)
 
 ## Description
 
-This used to be a Ghost website but it was becoming too heavy for my rpi. My
+This used to be a Ghost website, but it was becoming too heavy for my rpi. My
 issues was with the nodejs files was killing my SD card when updating, consumes
 more than 1GB of mem to just install the damn thing and pretty heavy on RAM
 while running (~300mb) for small servers like RPI.
