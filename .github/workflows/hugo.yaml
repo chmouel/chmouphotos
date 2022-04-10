@@ -17,11 +17,12 @@ jobs:
           persist-credentials: false
           # otherwise, there would be errors pushing refs to the destination repository.
           fetch-depth: 0
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
         with:
-          hugo-version: 'latest'
-          extended: true
+          path: |
+            resources/
 
       - name: Build
         run: hugo --minify --gc
@@ -31,4 +32,4 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/public
+          publish_dir: ./public
