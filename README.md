@@ -24,5 +24,3 @@ database and stuff.
 
 So I converted everything to a hugo site and theme. may be I'll make it
 independent theme one day if some people want it.
-
-Hosted on CloudFare pages!
