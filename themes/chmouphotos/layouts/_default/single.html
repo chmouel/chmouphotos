@@ -1,0 +1,71 @@
+{{ define "main" }}
+{{ $image := .Resources.GetMatch .Params.image }}
+{{ $image30 := $image.Resize "30x webp photo" }}
+{{ $image300 := $image.Resize "300x webp photo" }}
+{{ $image600 := $image.Resize "600x webp photo" }}
+{{ $image1000 := $image.Resize "1000x webp photo" }}
+{{ $image2000 := $image.Resize "2000x webp photo" }}
+
+<main class="main u-relative ">
+  <article class="post u-marginBottom40 u-relative">
+    <header class="post-header u-container u-maxWidth740 u-paddingTop30 u-relative zindex3">
+      <h1 class="post-title u-marginBottom20 u-fontSizeLargest u-md-fontSize36">{{.Title}}</h1>
+      <hr>
+
+    </header>
+
+    <figure class="post-image u-block u-marginAuto u-sizeFullHeight u-sizeFullWidth u-maxWidth1000">
+      <img class="u-block u-marginAuto u-sizeFullWidth simply-zoom" src="{{ $image.RelPermalink }}"
+        srcset="{{ $image300.RelPermalink }} 300w, {{ $image600.RelPermalink }} 600w, {{ $image1000.RelPermalink }} 1000w {{ $image2000.RelPermalink }} 2000w"
+        sizes="(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw" alt="{{.Title}}" />
+    </figure>
+
+
+
+    <div class="post-wrap u-maxWidth1000 u-relative u-marginAuto">
+      <div id="post-body" class="post-body u-container u-maxWidth740 u-relative">
+        {{ if .Content }}
+        <p>
+          {{ .Content }}
+        </p>
+        {{end}}
+      </div>
+    </div>
+  </article>
+
+  <footer class="post-footer u-container u-maxWidth740">
+    <div class="post-tags buttonSet u-marginTop30"></div>
+    <hr>
+    {{ $shuffled := shuffle .Site.RegularPages }}
+    {{ .Scratch.Set "random" (index ($shuffled) 0)}}
+    {{ if eq  (.Scratch.Get "random").RelPermalink .RelPermalink}}
+      {{ .Scratch.Set "random" (index ($shuffled) 1)}}
+    {{ end }}
+    {{ $random := .Scratch.Get "random" }}
+    
+    {{ with $random  }}
+    {{ $image := $random.Resources.GetMatch $random.Params.image }}
+    {{ $image300r := $image.Resize "300x webp photo" }}
+
+    <div class="u-flex u-relative godo-tracking " data-event-category="Article" data-event-action="Next photo"
+      data-event-label="{{.RelPermalink}}" data-event-non-interaction="true">
+      <a href="{{ .RelPermalink }}" class="prev-next-image-link u-relative u-bgColorGrayLight u-flex0"
+        aria-label="{{.Title}}">
+        <img class="u-absolute u-image blur-up lazyload" data-src="{{ $image300r.RelPermalink }}" alt="{{ .Title }}" />
+      </a>
+
+      <div class="prev-next-body u-paddingLeft20 u-flex1">
+        <div class="u-fontSizeSmaller u-lineHeight1 u-textMuted u-marginBottom10">Another photo</div>
+        <h2 class="prev-next-contentTitle u-marginBottom10 u-fontSize21">
+          <a href="{{.RelPermalink }}" class="u-relative zindex3">{{.Title}}</a>
+        </h2>
+        <p class="prev-next-excerpt u-fontSizeSmall u-textMuted u-lineClamp2 u-lineHeightTight"></p>
+      </div>
+
+      <a href="{{.RelPermalink }}" aria-label="{{ .Title }}" class="u-absolute0 zindex2"></a>
+    </div>
+    {{ end }}
+    <hr>
+  </footer>
+</main>
+{{ end }}

@@ -1,0 +1,22 @@
+{{ define "main" }}
+{{ $paginator := .Paginate .Data.Pages 9 }}
+
+{{ if $paginator.HasPrev }}
+<link rel="prev" href="{{ $paginator.Prev.URL }}"/>
+{{ end }}
+{{ if $paginator.HasNext }}
+<link rel="next" href="{{ $paginator.Next.URL }}"/>
+{{ end }}
+
+<main class="posts">
+    <div class="site-post feed-entry-content">
+        <div class="feed-entry-wrap u-maxWidth1100 container">
+            <div class="row">
+                {{range $index, $post := $paginator.Pages}}
+                {{ partial "listitem.html"  (dict "c" . "scope" . "index" $index) }}
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</main>
+{{ end }}

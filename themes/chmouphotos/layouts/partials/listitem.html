@@ -1,0 +1,37 @@
+{{ $image := .scope.Resources.GetMatch .c.Params.image }}
+{{ $image30 := $image.Resize "30x webp photo" }}
+{{ $image300 := $image.Resize "300x webp photo" }}
+{{ $image600 := $image.Resize "600x webp photo" }}
+{{ $image1000 := $image.Resize "1000x webp photo" }}
+
+{{if eq .index 0 }}
+  {{ .scope.Scratch.Set "class" "l12 ss1"}}
+{{ end }}
+
+{{if or (eq .index 1) (eq .index 2) (eq .index 3) (eq .index 6) (eq .index 7) (eq .index 8) }}
+  {{ .scope.Scratch.Set "class" "l4"}}
+{{end}}
+
+{{if or (eq .index 4) (eq .index 5) }}
+  {{ .scope.Scratch.Set "class" "ss2"}}
+{{end}}
+
+<div class="col s12 m6 {{ .scope.Scratch.Get "class" }}">
+  <article class="story u-relative">
+    <figure class="story-image u-relative u-borderLighter u-bgColorGrayLight u-block u-overflowHidden">
+      <a href="{{ .scope.Permalink }}" class="u-block">
+        <img class="story-img u-absolute u-image u-block blur-up lazyload"
+             src="{{ $image.RelPermalink }}"
+             srcset="{{ $image30.RelPermalink }}"
+             data-srcset="{{ $image300.RelPermalink }} 300w, {{ $image600.RelPermalink }} 600w, {{ $image1000.RelPermalink }} 1000w"
+             data-sizes="(max-width: 1000px) 400px, 600px"
+             alt="{{ .scope.Title }}"/>
+      </a>
+    </figure>
+    
+    <div class="story-body u-paddingTop20 u-flexColumnTop">
+      <h2 class="story-title u-fontSizeLarge u-contentTitle">
+        <a href="{{ .scope.Permalink }}" class="u-block">{{ .scope.Title }}</a></h2>
+    </div>
+  </article>
+</div>
