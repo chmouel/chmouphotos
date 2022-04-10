@@ -1,0 +1,24 @@
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+  <title>Chmouel's Photos</title>
+
+  <meta name="HandheldFriendly" content="True"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {{ $style := resources.Get "css/main.css" }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="{{"icons/apple-touch-icon.png" | relURL}}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{"icons/favicon-32x32.png" | relURL}}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{"icons/favicon-16x16.png" | relURL}}">
+  <link rel="manifest" href="{{"icons/site.webmanifest" | relURL}}">
+  <link rel="shortcut icon" href="{{"icons/favicon.ico" | relURL}}">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  
+    
+  <script>
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
