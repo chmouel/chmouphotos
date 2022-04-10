@@ -22,8 +22,7 @@ jobs:
         uses: actions/cache@v3
         with:
           key: ${{ runner.os }}-build-${{ env.cache-name }}
-          path: |
-            resources/
+          path: /tmp/hugo_cache
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
