@@ -18,9 +18,10 @@ jobs:
           # otherwise, there would be errors pushing refs to the destination repository.
           fetch-depth: 0
 
-      - name: Cache Gradle packages
+      - name: Cache Resources packages
         uses: actions/cache@v3
         with:
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
           path: |
             resources/
 
