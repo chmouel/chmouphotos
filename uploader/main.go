@@ -22,6 +22,7 @@ var (
 	// / HOST where to bind the upload
 	chmouPhotosHost = "localhost"
 	chmouPhotosPort = "1322"
+	redirectURL = "https://github.com/chmouel/chmouphotos/actions"
 )
 
 var uploadPage []byte
@@ -167,5 +168,5 @@ func upload(c echo.Context) error {
 		c.Logger().Info(output)
 	}
 
-	return c.Redirect(http.StatusMovedPermanently, "https://photos.chmouel.com")
+	return c.Redirect(http.StatusMovedPermanently, redirectURL)
 }
