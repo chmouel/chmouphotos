@@ -21,7 +21,7 @@ import (
 var (
 	// / HOST where to bind the upload
 	chmouPhotosHost = "localhost"
-	chmouPhotosPort = "1314"
+	chmouPhotosPort = "1322"
 )
 
 var uploadPage []byte
