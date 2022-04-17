@@ -14,13 +14,15 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 var (
 	// / HOST where to bind the upload
 	chmouPhotosHost = "localhost"
 	chmouPhotosPort = "1314"
-	chmouPhotosDir  = "/tmp/photos"
 )
 
 //go:embed html/upload.html
@@ -54,109 +56,118 @@ func RunGit(dir string, args ...string) (string, error) {
 	return output.String(), nil
 }
 
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "POST" {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		r.ParseMultipartForm(32 << 20)
-		alphanum, err := regexp.Compile("[^a-zA-Z0-9-]+")
-		description := r.FormValue("description")
-		title := r.FormValue("title")
-		href := strings.Trim(
-			alphanum.ReplaceAllString(
-				strings.ReplaceAll(
-					strings.ToLower(
-						strings.TrimSpace(title)),
-					" ",
-					"-"),
-				""),
-			"-")
-
-		file, handler, err := r.FormFile("file")
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-
-			fmt.Println(err)
-			return
-		}
-		defer file.Close()
-		postDir := filepath.Join(getOrEnv("CHMOUPHOTOS_DIR", chmouPhotosDir), "content", href)
-		err = os.MkdirAll(postDir, 0o755)
-		if err != nil {
-			fmt.Println(err)
-			w.WriteHeader(http.StatusInternalServerError)
-
-			return
-		}
-
-		f, err := os.OpenFile(filepath.Join(postDir, handler.Filename), os.O_WRONLY|os.O_CREATE, 0o644)
-		if err != nil {
-			fmt.Println(err)
-			w.WriteHeader(http.StatusInternalServerError)
-
-			return
-		}
-		defer f.Close()
-
-		dt := time.Now()
-		date := dt.Format("2006-01-02T15:04:05")
-		md := filepath.Join(postDir, "index.md")
-		mdcontent := fmt.Sprintf(`---
-title: %s
-date: %s+02:00
-image: %s
----
-%s
-`, title, date, handler.Filename, description)
-		err = ioutil.WriteFile(md, []byte(mdcontent), 0o644)
-		if err != nil {
-			fmt.Println(err)
-			w.WriteHeader(http.StatusInternalServerError)
-
-			return
-		}
-		io.Copy(f, file)
-
-		output, err := RunGit(getOrEnv("CHMOUPHOTOS_DIR", chmouPhotosDir), "add", filepath.Join("content", href))
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-
-			fmt.Println(err)
-			return
-		}
-		if output != "" {
-			fmt.Println(output)
-		}
-		output, err = RunGit(getOrEnv("CHMOUPHOTOS_DIR", chmouPhotosDir), "commit", "-m", fmt.Sprintf("add post %s", href), filepath.Join("content", href))
-		if err != nil {
-			fmt.Println(err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if output != "" {
-			fmt.Println(output)
-		}
-
-		output, err = RunGit(getOrEnv("CHMOUPHOTOS_DIR", chmouPhotosDir), "push", "origin", "main")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		if output != "" {
-			fmt.Println(output)
-		}
-
-		w.WriteHeader(http.StatusAccepted)
-	})
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write(uploadPage)
-	})
-	err := http.ListenAndServe(fmt.Sprintf("%s:%s", getOrEnv("CHMOUPHOTOS_HOST", chmouPhotosHost), getOrEnv("CHMOUPHOTOS_PORT", chmouPhotosPort)), mux)
+func getDir() string {
+	if env := os.Getenv("CHMOUPHOTOS_DIR"); env != "" {
+		return env
+	}
+	ex, err := os.Executable()
 	if err != nil {
+		panic(err)
+	}
+	defpath := filepath.Dir(ex)
+	return defpath
+}
+
+func main() {
+	rootDir := getDir()
+	e := echo.New()
+	e.GET("/", func(c echo.Context) error {
+		b, err := ioutil.ReadFile(filepath.Join(rootDir, "uploader/html/upload.html"))
+		if err != nil {
+			c.Error(err)
+			return err
+		}
+		return c.HTML(http.StatusOK, string(b))
+	})
+	e.POST("/photos", upload)
+
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
+	if err := e.Start("127.0.0.1:1313"); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func upload(c echo.Context) error {
+	rootDir := getDir()
+	alphanum, err := regexp.Compile("[^a-zA-Z0-9-]+")
+	description := c.FormValue("description")
+	title := c.FormValue("title")
+
+	if title == "" {
+		return echo.NewHTTPError(http.StatusInternalServerError, "You are missing a title")
+	}
+	href := strings.Trim(
+		alphanum.ReplaceAllString(
+			strings.ReplaceAll(
+				strings.ToLower(
+					strings.TrimSpace(title)),
+				" ",
+				"-"),
+			""),
+		"-")
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "You are missing a file")
+	}
+
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	fdir := filepath.Join(rootDir, "content", href)
+	savepath := filepath.Join(fdir, href+filepath.Ext(file.Filename))
+	if _, err := os.Stat(savepath); err == nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "post already exist")
+	}
+	fmt.Println(description)
+	c.Logger().Debugf("Saving %s to %s", file.Filename, savepath)
+
+	err = os.MkdirAll(fdir, 0o755)
+	if err != nil {
+		return err
+	}
+	dst, err := os.Create(savepath)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+	if _, err = io.Copy(dst, src); err != nil {
+		return err
+	}
+	dt := time.Now()
+	date := dt.Format("2006-01-02T15:04:05")
+	md := filepath.Join(fdir, "index.md")
+	mdcontent := fmt.Sprintf("---\ntitle: %s\ndate: %s+02:00\nimage: %s\n---\n%s", title, date, filepath.Base(savepath), description)
+	err = ioutil.WriteFile(md, []byte(mdcontent), 0o644)
+	if err != nil {
+		return err
+	}
+
+	output, err := RunGit(rootDir, "add", filepath.Join("content", href))
+	if err != nil {
+		return err
+	}
+	if output != "" {
+		c.Logger().Info(output)
+	}
+	output, err = RunGit(rootDir, "commit", "-m", fmt.Sprintf("add post %s", href), filepath.Join("content", href))
+	if err != nil {
+		return err
+	}
+	if output != "" {
+		c.Logger().Info(output)
+	}
+
+	output, err = RunGit(rootDir, "push", "origin", "main")
+	if err != nil {
+		return err
+	}
+	if output != "" {
+		c.Logger().Info(output)
+	}
+
+	return c.Redirect(http.StatusMovedPermanently, "https://photos.chmouel.com")
 }
