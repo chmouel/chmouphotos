@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	_ "embed"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -25,7 +24,6 @@ var (
 	chmouPhotosPort = "1314"
 )
 
-//go:embed html/upload.html
 var uploadPage []byte
 
 func getOrEnv(env string, def string) string {
