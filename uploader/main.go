@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	_ "embed"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -22,10 +21,10 @@ import (
 var (
 	// / HOST where to bind the upload
 	chmouPhotosHost = "localhost"
-	chmouPhotosPort = "1314"
+	chmouPhotosPort = "1322"
+	redirectURL = "https://github.com/chmouel/chmouphotos/actions"
 )
 
-//go:embed html/upload.html
 var uploadPage []byte
 
 func getOrEnv(env string, def string) string {
@@ -71,7 +70,7 @@ func getDir() string {
 func main() {
 	rootDir := getDir()
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
+	e.GET("/photos", func(c echo.Context) error {
 		b, err := ioutil.ReadFile(filepath.Join(rootDir, "uploader/html/upload.html"))
 		if err != nil {
 			c.Error(err)
@@ -82,7 +81,7 @@ func main() {
 	e.POST("/photos", upload)
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
-	if err := e.Start("127.0.0.1:1313"); err != nil {
+	if err := e.Start(chmouPhotosHost + ":" + chmouPhotosPort); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -169,5 +168,5 @@ func upload(c echo.Context) error {
 		c.Logger().Info(output)
 	}
 
-	return c.Redirect(http.StatusMovedPermanently, "https://photos.chmouel.com")
+	return c.Redirect(http.StatusMovedPermanently, redirectURL)
 }
