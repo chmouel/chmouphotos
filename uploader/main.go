@@ -139,7 +139,7 @@ func upload(c echo.Context) error {
 	dt := time.Now()
 	date := dt.Format("2006-01-02T15:04:05")
 	md := filepath.Join(fdir, "index.md")
-	mdcontent := fmt.Sprintf("---\ntitle: %s\ndate: %s+02:00\nimage: %s\n---\n%s", title, date, filepath.Base(savepath), description)
+	mdcontent := fmt.Sprintf("---\ntitle: %s\ndate: %s+02:00\n---\n%s", title, date, description)
 	err = ioutil.WriteFile(md, []byte(mdcontent), 0o644)
 	if err != nil {
 		return err

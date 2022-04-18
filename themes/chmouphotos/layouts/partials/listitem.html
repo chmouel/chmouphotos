@@ -1,4 +1,4 @@
-{{ $image := .scope.Resources.GetMatch .c.Params.image }}
+{{ $image := index (.scope.Resources.ByType "image") 0 }}
 {{ $image30 := $image.Resize "30x webp photo" }}
 {{ $image300 := $image.Resize "300x webp photo" }}
 {{ $image600 := $image.Resize "600x webp photo" }}

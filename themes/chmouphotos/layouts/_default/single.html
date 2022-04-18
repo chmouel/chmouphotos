@@ -1,5 +1,5 @@
 {{ define "main" }}
-{{ $image := .Resources.GetMatch .Params.image }}
+{{ $image := index (.Resources.ByType "image") 0 }}
 {{ $image30 := $image.Resize "30x webp photo" }}
 {{ $image300 := $image.Resize "300x webp photo" }}
 {{ $image600 := $image.Resize "600x webp photo" }}
@@ -37,12 +37,12 @@
     {{ $shuffled := shuffle .Site.RegularPages }}
     {{ .Scratch.Set "random" (index ($shuffled) 0)}}
     {{ if eq  (.Scratch.Get "random").RelPermalink .RelPermalink}}
-      {{ .Scratch.Set "random" (index ($shuffled) 1)}}
+    {{ .Scratch.Set "random" (index ($shuffled) 1)}}
     {{ end }}
     {{ $random := .Scratch.Get "random" }}
     
     {{ with $random  }}
-    {{ $image := $random.Resources.GetMatch $random.Params.image }}
+    {{ $image := index ($random.Resources.ByType "image") 0 }}
     {{ $image300r := $image.Resize "300x webp photo" }}
 
     <div class="u-flex u-relative godo-tracking " data-event-category="Article" data-event-action="Next photo"
