@@ -11,13 +11,11 @@ redeploy:
 		sudo mv -fv /tmp/chmouphotos /usr/local/bin/chmouphotos && \
 		sudo systemctl start chmouphotos && sudo systemctl status chmouphotos
 
-
-
 cross-rpi:
-	@env GOOS=linux GOARCH=arm GOARM=7 go build -o chmouphotos
+	@env GOOS=linux GOARCH=arm GOARM=7 go build -o /tmp/chmouphotos-rpi
 
 sync: cross-rpi
 	ssh $(RPI_HOST) sudo systemctl stop chmouphotos && \
-	scp chmouphotos $(RPI_HOST):/usr/local/bin && \
+	scp /tmp/chmouphotos-rpi $(RPI_HOST):/usr/local/bin/chmouphotos && \
 	ssh $(RPI_HOST) sudo systemctl stop chmouphotos && \
 	ssh $(RPI_HOST) sudo systemctl status chmouphotos
