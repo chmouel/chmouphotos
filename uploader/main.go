@@ -153,7 +153,7 @@ func upload(c echo.Context) error {
 		return fmt.Errorf("cannot commit : %s err: %w", output, err)
 	}
 
-	if output, err := RunGit(rootDir, "pull", "--ff-only", "origin"); err != nil {
+	if output, err := RunGit(rootDir, "pull", "--rebase", "origin"); err != nil {
 		return fmt.Errorf("cannot pull ff only with output: %s err: %w", output, err)
 	}
 
