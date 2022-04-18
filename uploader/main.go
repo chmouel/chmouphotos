@@ -22,7 +22,7 @@ var (
 	// / HOST where to bind the upload
 	chmouPhotosHost = "localhost"
 	chmouPhotosPort = "1322"
-	redirectURL = "https://github.com/chmouel/chmouphotos/actions"
+	redirectURL     = "https://github.com/chmouel/chmouphotos/actions"
 )
 
 var uploadPage []byte
@@ -145,27 +145,20 @@ func upload(c echo.Context) error {
 		return err
 	}
 
-	output, err := RunGit(rootDir, "add", filepath.Join("content", href))
-	if err != nil {
-		return err
-	}
-	if output != "" {
-		c.Logger().Info(output)
-	}
-	output, err = RunGit(rootDir, "commit", "-m", fmt.Sprintf("add post %s", href), filepath.Join("content", href))
-	if err != nil {
-		return err
-	}
-	if output != "" {
-		c.Logger().Info(output)
+	if output, err := RunGit(rootDir, "add", filepath.Join("content", href)); err != nil {
+		return fmt.Errorf("cannot add content: %s err: %w", output, err)
 	}
 
-	output, err = RunGit(rootDir, "push", "origin", "main")
-	if err != nil {
-		return err
+	if output, err := RunGit(rootDir, "commit", "-m", fmt.Sprintf("add post %s", href), filepath.Join("content", href)); err != nil {
+		return fmt.Errorf("cannot commit : %s err: %w", output, err)
 	}
-	if output != "" {
-		c.Logger().Info(output)
+
+	if output, err := RunGit(rootDir, "pull", "--ff-only", "origin"); err != nil {
+		return fmt.Errorf("cannot pull ff only with output: %s err: %w", output, err)
+	}
+
+	if output, err := RunGit(rootDir, "push", "origin", "main"); err != nil {
+		return fmt.Errorf("cannot push origin main: %s err: %w", output, err)
 	}
 
 	return c.Redirect(http.StatusMovedPermanently, redirectURL)
