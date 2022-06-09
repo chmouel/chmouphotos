@@ -1,9 +1,16 @@
-{{ $image := index (.scope.Resources.ByType "image") 0 }}
+{{ $image := index (.scope.Resources.Match "*") 0 }}
 {{ $image_ext := path.Ext $image }}
+{{ $image30 := $image }}
+{{ $image300 := $image }}
+{{ $image600 := $image }}
+{{ $image1000 := $image }}
+
+{{- if or (eq $image_ext ".jpg") (eq $image_ext ".png") }}
 {{ $image30 := $image.Resize "30x webp photo" }}
 {{ $image300 := $image.Resize "300x webp photo" }}
 {{ $image600 := $image.Resize "600x webp photo" }}
 {{ $image1000 := $image.Resize "1000x webp photo" }}
+{{ end }}
 
 {{ if eq .index 0 }}
   {{ .scope.Scratch.Set "class" "l12 ss1"}}
@@ -21,7 +28,7 @@
   <article class="story u-relative">
     <figure class="story-image u-relative u-borderLighter u-bgColorGrayLight u-block u-overflowHidden">
       <a href="{{ .scope.Permalink }}" class="u-block">
-        {{- if ne $image_ext ".gif" }}
+        {{- if or (eq $image_ext ".jpg") (eq $image_ext ".png")  }}
         <img class="story-img u-absolute u-image u-block blur-up lazyload"
              src="{{ $image.RelPermalink }}"
              srcset="{{ $image30.RelPermalink }}"
@@ -29,8 +36,20 @@
              data-sizes="(max-width: 1000px) 400px, 600px"
              alt="{{ .scope.Title }}"/>
         {{- else }}
+        {{- if or (eq $image_ext ".mp4") (eq $image_ext ".vid") }}
+
+        <video id="vid" width="100%" controls muted autoplay>
+          <source src="{{ $image.RelPermalink }}" type="video/webm">
+          Your browser does not support the video tag.  
+        </video>
+        <script>
+          document.getElementById('vid').play();
+        </script>
+
+        {{- else }}
         <img class="story-img u-absolute u-image u-block blur-up lazyload"
              src="{{ $image.RelPermalink }}">
+        {{- end }}
         {{- end }}
       </a>
     </figure>
