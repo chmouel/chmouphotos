@@ -70,7 +70,7 @@ func getDir() string {
 func main() {
 	rootDir := getDir()
 	e := echo.New()
-	e.GET("/photos", func(c echo.Context) error {
+	e.GET("/photos/upload", func(c echo.Context) error {
 		b, err := ioutil.ReadFile(filepath.Join(rootDir, "uploader/html/upload.html"))
 		if err != nil {
 			c.Error(err)
@@ -78,7 +78,7 @@ func main() {
 		}
 		return c.HTML(http.StatusOK, string(b))
 	})
-	e.POST("/photos", upload)
+	e.POST("/photos/upload", upload)
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
 	if err := e.Start(chmouPhotosHost + ":" + chmouPhotosPort); err != nil {

@@ -1,4 +1,4 @@
-RPI_HOST = kodi
+RPI_HOST = home.chmouel.com
 
 all: redeploy
 
