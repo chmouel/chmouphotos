@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	_ "embed"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -25,7 +26,8 @@ var (
 	redirectURL     = "https://github.com/chmouel/chmouphotos/actions"
 )
 
-var uploadPage []byte
+//go:embed html/upload.html
+var indexTmpl []byte
 
 func getOrEnv(env string, def string) string {
 	if os.Getenv(env) != "" {
@@ -68,15 +70,9 @@ func getDir() string {
 }
 
 func main() {
-	rootDir := getDir()
 	e := echo.New()
 	e.GET("/photos/upload", func(c echo.Context) error {
-		b, err := ioutil.ReadFile(filepath.Join(rootDir, "uploader/html/upload.html"))
-		if err != nil {
-			c.Error(err)
-			return err
-		}
-		return c.HTML(http.StatusOK, string(b))
+		return c.HTML(http.StatusOK, string(indexTmpl))
 	})
 	e.POST("/photos/upload", upload)
 
