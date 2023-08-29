@@ -38,7 +38,7 @@
         {{- else }}
         {{- if or (eq $image_ext ".mp4") (eq $image_ext ".vid") }}
 
-        <video id="vid" width="100%" controls muted autoplay>
+        <video id="vid" style="max-height: 600px;max-width: 800px;"  loop controls muted autoplay>
           <source src="{{ $image.RelPermalink }}" type="video/webm">
           Your browser does not support the video tag.  
         </video>
